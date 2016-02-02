@@ -1,6 +1,5 @@
-package edu.gatech.oad.antlab.person;
 import java.lang.StringBuilder;
-
+package edu.gatech.oad.antlab.person;
 
 /**
  *  A simple class for person 5
