@@ -1,8 +1,8 @@
+package edu.gatech.oad.antlab.person;
 import java.util.Collections;
 import java.lang.StringBuilder;
 import java.util.List;
 import java.util.ArrayList;
-package edu.gatech.oad.antlab.person;
 
 /**
  *  A simple class for person 2
