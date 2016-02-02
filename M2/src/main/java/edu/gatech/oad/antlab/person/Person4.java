@@ -10,6 +10,7 @@ package edu.gatech.oad.antlab.person;
  */
 public class Person4 {
   /** Holds the persons real name */
+
   private String name;
     /**
      * The constructor, takes in the persons
@@ -31,7 +32,11 @@ public class Person4 {
      */
     private String calc(String input) {
       //Person 4 put your implementation here
-      return null;
+      String returned = "";
+      for (int i = 0; i < input.length(); i++) {
+        returned += (input.charAt(i) + 1);
+      }
+      return returned;
     }
     
     /**
