@@ -1,9 +1,8 @@
+defaultTasks 'clean', 'jar'
 apply plugin: 'java'
 
-defaultTasks 'clean', 'jar'
 sourceCompatibility = 1.8
 version = '1.0'
-mainClassName='AntLabMain'
 
 repositories {
     mavenCentral()
