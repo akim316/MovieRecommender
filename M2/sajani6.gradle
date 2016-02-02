@@ -1,7 +1,6 @@
 defaultTasks 'clean', 'jar'
 
 apply plugin: 'java'
-apply plugin: 'application'
 
 sourceCompatibility = 1.8
 version = '1.0'
@@ -16,7 +15,7 @@ jar {
         attributes  'Implementation-Title' : 'Gradle Quickstart' ,
                  'Implementation-Version' : '1.0',
                  'Main-Class' : 'edu.gatech.oad.antlab.pkg1.AntLabMain',
-                 'Class-Path' : '../../lib/resources.jar'
+                 'Class-Path' : 'lib/resources.jar'
     }
 }
 
