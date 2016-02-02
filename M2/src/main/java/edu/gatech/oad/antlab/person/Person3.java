@@ -53,6 +53,7 @@ public class Person3 {
             out[index] = c;
             index--;
         }
-        return out.toString();
+        String str = new String(out);
+        return str;
     }
 }
