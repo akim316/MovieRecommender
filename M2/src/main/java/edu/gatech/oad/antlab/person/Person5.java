@@ -1,7 +1,6 @@
 package edu.gatech.oad.antlab.person;
 import java.lang.StringBuilder;
 
-
 /**
  *  A simple class for person 5
  *  returns their name and a
