@@ -1,4 +1,4 @@
-package com.cbk.movierecommender;
+package com.cbk.TechTrollywood;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
