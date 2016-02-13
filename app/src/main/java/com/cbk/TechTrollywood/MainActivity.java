@@ -71,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements
 
     /* Data from the authenticated user */
     private AuthData mAuthData;
-    
+
     /* Listener for Firebase session changes */
     private Firebase.AuthStateListener mAuthStateListener;
 
@@ -123,6 +123,9 @@ public class MainActivity extends ActionBarActivity implements
     private Button cancelButton;
     private EditText user;
     private EditText password;
+
+    private Button setNameButton;
+    private EditText setNameField;
 
 
     /* *************************************
@@ -202,7 +205,7 @@ public class MainActivity extends ActionBarActivity implements
             }
         });
 
-        cancelButton=(Button)findViewById(R.id.Cancel);
+        cancelButton = (Button) findViewById(R.id.Cancel);
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,8 +215,8 @@ public class MainActivity extends ActionBarActivity implements
         /* *************************************
          *               REGISTER              *
          ***************************************/
-        user   = (EditText)findViewById(R.id.username_field);
-        password = (EditText)findViewById(R.id.password_field);
+        user = (EditText) findViewById(R.id.username_field);
+        password = (EditText) findViewById(R.id.password_field);
         registerButton = (Button) findViewById(R.id.register);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,7 +226,18 @@ public class MainActivity extends ActionBarActivity implements
         });
 
 
+        setNameButton = (Button) findViewById(R.id.setNameButton);
+        setNameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                setName();
+            }
+        });
 
+
+
+
+        setNameField = (EditText) findViewById(R.id.displayNameField);
 
 
         /* *************************************
@@ -272,7 +286,7 @@ public class MainActivity extends ActionBarActivity implements
         if (mFacebookAccessTokenTracker != null) {
             mFacebookAccessTokenTracker.stopTracking();
         }
-        
+
         // if changing configurations, stop tracking firebase session.
         mFirebaseRef.removeAuthStateListener(mAuthStateListener);
     }
@@ -385,6 +399,8 @@ public class MainActivity extends ActionBarActivity implements
             mLoggedInStatusTextView.setVisibility(View.VISIBLE);
             user.setVisibility(View.GONE);
             password.setVisibility(View.GONE);
+            setNameField.setVisibility(View.VISIBLE);
+            setNameButton.setVisibility(View.VISIBLE);
             /* show a provider specific status text */
             String name = null;
             if (authData.getProvider().equals("facebook")
@@ -400,6 +416,7 @@ public class MainActivity extends ActionBarActivity implements
             if (name != null) {
                 mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
             }
+
         } else {
             /* No authenticated user show all the login buttons */
             mFacebookLoginButton.setVisibility(View.VISIBLE);
@@ -412,6 +429,8 @@ public class MainActivity extends ActionBarActivity implements
             cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
+            setNameField.setVisibility(View.GONE);
+            setNameButton.setVisibility(View.GONE);
         }
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
@@ -582,14 +601,35 @@ public class MainActivity extends ActionBarActivity implements
      */
     public void loginWithPassword() {
         mAuthProgressDialog.show();
-        mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(), new AuthResultHandler("password"));
+        mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(), new AuthResultHandler("password") {
+            @Override
+            public void onAuthenticated(AuthData authData) {
+                // Authentication just completed successfully :)
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("provider", authData.getProvider());
+                if (authData.getProviderData().containsKey("displayName")) {
+                    map.put("displayName", authData.getProviderData().get("displayName").toString());
+                } else
+                    map.put("displayName", "");
+                mFirebaseRef.child("users").child(authData.getUid()).setValue(map);
+            }
+
+            @Override
+            public void onAuthenticationError(FirebaseError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+
+        });
+
+
     }
     /* ************************************
      *              REGISTER              *
      **************************************
      */
 
-    private void showLogin(){
+    private void showLogin() {
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -611,9 +651,11 @@ public class MainActivity extends ActionBarActivity implements
         registerButton.setVisibility(View.GONE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
         cancelButton.setVisibility(View.VISIBLE);
+        setNameField.setVisibility(View.GONE);
+        setNameButton.setVisibility(View.GONE);
     }
 
-    private void cancel(){
+    private void cancel() {
         mFacebookLoginButton.setVisibility(View.VISIBLE);
         mGoogleLoginButton.setVisibility(View.VISIBLE);
         mTwitterLoginButton.setVisibility(View.VISIBLE);
@@ -622,6 +664,8 @@ public class MainActivity extends ActionBarActivity implements
         registerButton.setVisibility(View.VISIBLE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
+        setNameField.setVisibility(View.GONE);
+        setNameButton.setVisibility(View.GONE);
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -629,13 +673,15 @@ public class MainActivity extends ActionBarActivity implements
             }
         });
     }
-    public void register(){
+
+    public void register() {
         mFirebaseRef.createUser(user.getText().toString(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
                 Toast.makeText(getApplicationContext(), "account created",
                         Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void onError(FirebaseError firebaseError) {
                 Toast.makeText(getApplicationContext(), firebaseError.getMessage(),
@@ -643,6 +689,7 @@ public class MainActivity extends ActionBarActivity implements
             }
         });
     }
+
     /* ************************************
      *             ANONYMOUSLY            *
      **************************************
@@ -650,5 +697,15 @@ public class MainActivity extends ActionBarActivity implements
     private void loginAnonymously() {
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
+    }
+
+    private void setName(){
+        AuthData authData = mFirebaseRef.getAuth();
+        if (authData != null) {
+            mFirebaseRef.child("users").child(authData.getUid()).child("displayName").setValue(setNameField.getText().toString());
+        } else {
+            Toast.makeText(getApplicationContext(), "No user authenticated",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 }
