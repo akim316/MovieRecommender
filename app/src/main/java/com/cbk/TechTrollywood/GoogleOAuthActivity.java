@@ -18,7 +18,7 @@ import com.google.android.gms.plus.Plus;
 import java.io.IOException;
 
 /**
- * This is a sample GoogleOAuthActivity that has been extracted from {@link com.firebase.samples.logindemo.MainActivity} to
+ * This is a sample GoogleOAuthActivity that has been extracted from {@link com.cbk.TechTrollywood.LoginActivity} to
  * allow for better visibility.
  */
 public class GoogleOAuthActivity extends Activity implements
@@ -71,7 +71,7 @@ public class GoogleOAuthActivity extends Activity implements
         if (mGoogleConnectionResult.hasResolution()) {
             try {
                 mGoogleIntentInProgress = true;
-                mGoogleConnectionResult.startResolutionForResult(this, MainActivity.RC_GOOGLE_LOGIN);
+                mGoogleConnectionResult.startResolutionForResult(this, LoginActivity.RC_GOOGLE_LOGIN);
             } catch (IntentSender.SendIntentException e) {
                 // The intent was canceled before it was sent.  Return to the default
                 // state and attempt to connect to get an updated ConnectionResult.
@@ -103,7 +103,7 @@ public class GoogleOAuthActivity extends Activity implements
                     if (!mGoogleIntentInProgress) {
                         mGoogleIntentInProgress = true;
                         Intent recover = e.getIntent();
-                        startActivityForResult(recover, MainActivity.RC_GOOGLE_LOGIN);
+                        startActivityForResult(recover, LoginActivity.RC_GOOGLE_LOGIN);
                     }
                 } catch (GoogleAuthException authEx) {
                     /* The call is not ever expected to succeed assuming you have already verified that
@@ -124,7 +124,7 @@ public class GoogleOAuthActivity extends Activity implements
                 } else if (errorMessage != null) {
                     resultIntent.putExtra("error", errorMessage);
                 }
-                setResult(MainActivity.RC_GOOGLE_LOGIN, resultIntent);
+                setResult(LoginActivity.RC_GOOGLE_LOGIN, resultIntent);
                 finish();
             }
         };

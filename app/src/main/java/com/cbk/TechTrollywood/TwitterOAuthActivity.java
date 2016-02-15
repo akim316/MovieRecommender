@@ -84,7 +84,7 @@ public class TwitterOAuthActivity extends Activity {
     }
 
     private void getTwitterOAuthTokenAndLogin(final RequestToken requestToken, final String oauthVerifier) {
-        // once a user authorizes the application, get the auth token and return to the MainActivity
+        // once a user authorizes the application, get the auth token and return to the LoginActivity
         new AsyncTask<Void, Void, AccessToken>() {
             @Override
             protected AccessToken doInBackground(Void... params) {
@@ -103,7 +103,7 @@ public class TwitterOAuthActivity extends Activity {
                 resultIntent.putExtra("oauth_token", token.getToken());
                 resultIntent.putExtra("oauth_token_secret", token.getTokenSecret());
                 resultIntent.putExtra("user_id", token.getUserId() + "");
-                setResult(MainActivity.RC_TWITTER_LOGIN, resultIntent);
+                setResult(LoginActivity.RC_TWITTER_LOGIN, resultIntent);
                 finish();
             }
         }.execute();
