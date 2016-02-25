@@ -707,5 +707,7 @@ public class LoginActivity extends ActionBarActivity implements
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
+        Intent intent = new Intent(this, SearchActivity.class);
+        startActivity(intent);
     }
 }

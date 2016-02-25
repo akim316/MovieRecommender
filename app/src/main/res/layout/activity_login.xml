@@ -18,16 +18,25 @@
         android:textAlignment="center"
         android:layout_marginTop="20dp" />
 
-    <com.facebook.login.widget.LoginButton
-        android:id="@+id/login_with_facebook"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/login_with_facebook" />
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/username_field"
+        android:hint="Email" />
 
-    <com.google.android.gms.common.SignInButton
-        android:id="@+id/login_with_google"
-        android:text="@string/login_with_google"
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:ems="10"
+        android:id="@+id/password_field"
+        android:hint="Password" />
+
+    <Button
+        android:id="@+id/register"
+        android:text="@string/register"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -49,26 +58,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/register"
-        android:text="@string/register"
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/login_with_facebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/login_with_facebook" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/login_with_google"
+        android:text="@string/login_with_google"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:text="Email"
-        android:ems="10"
-        android:id="@+id/username_field" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:ems="10"
-        android:id="@+id/password_field" />
 
     <Button
         android:id="@+id/Cancel"
