@@ -13,4 +13,6 @@
     <string name="register">Register</string>
     <string name="cancel">Cancel</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="key">yedukp76ffytfuy24zsqk7f5</string>
 </resources>

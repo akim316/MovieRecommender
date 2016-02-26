@@ -388,7 +388,10 @@ public class LoginActivity extends ActionBarActivity implements
      */
     private void setAuthenticatedUser(AuthData authData) {
         if (authData != null) {
-            /* Hide all the login buttons */
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
+            /*
+            //Hide all the login buttons
             mFacebookLoginButton.setVisibility(View.GONE);
             mGoogleLoginButton.setVisibility(View.GONE);
             mTwitterLoginButton.setVisibility(View.GONE);
@@ -401,7 +404,7 @@ public class LoginActivity extends ActionBarActivity implements
             password.setVisibility(View.GONE);
             setNameField.setVisibility(View.VISIBLE);
             setNameButton.setVisibility(View.VISIBLE);
-            /* show a provider specific status text */
+            // show a provider specific status text
             String name = null;
             if (authData.getProvider().equals("facebook")
                     || authData.getProvider().equals("google")
@@ -416,6 +419,7 @@ public class LoginActivity extends ActionBarActivity implements
             if (name != null) {
                 mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
             }
+            */
 
         } else {
             /* No authenticated user show all the login buttons */
@@ -707,7 +711,6 @@ public class LoginActivity extends ActionBarActivity implements
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
-        Intent intent = new Intent(this, SearchActivity.class);
-        startActivity(intent);
+
     }
 }
