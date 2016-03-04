@@ -124,9 +124,6 @@ public class LoginActivity extends ActionBarActivity implements
     private EditText user;
     private EditText password;
 
-    private Button setNameButton;
-    private EditText setNameField;
-
 
     /* *************************************
      *            ANONYMOUSLY              *
@@ -224,20 +221,6 @@ public class LoginActivity extends ActionBarActivity implements
                 register();
             }
         });
-
-
-        setNameButton = (Button) findViewById(R.id.setNameButton);
-        setNameButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                setName();
-            }
-        });
-
-
-
-
-        setNameField = (EditText) findViewById(R.id.displayNameField);
 
 
         /* *************************************
@@ -433,8 +416,6 @@ public class LoginActivity extends ActionBarActivity implements
             cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
-            setNameField.setVisibility(View.GONE);
-            setNameButton.setVisibility(View.GONE);
         }
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
@@ -609,13 +590,6 @@ public class LoginActivity extends ActionBarActivity implements
             @Override
             public void onAuthenticated(AuthData authData) {
                 // Authentication just completed successfully :)
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("provider", authData.getProvider());
-                if (authData.getProviderData().containsKey("displayName")) {
-                    map.put("displayName", authData.getProviderData().get("displayName").toString());
-                } else
-                    map.put("displayName", "");
-                mFirebaseRef.child("users").child(authData.getUid()).setValue(map);
             }
 
             @Override
@@ -655,8 +629,6 @@ public class LoginActivity extends ActionBarActivity implements
         registerButton.setVisibility(View.GONE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
         cancelButton.setVisibility(View.VISIBLE);
-        setNameField.setVisibility(View.GONE);
-        setNameButton.setVisibility(View.GONE);
     }
 
     private void cancel() {
@@ -668,8 +640,6 @@ public class LoginActivity extends ActionBarActivity implements
         registerButton.setVisibility(View.VISIBLE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
-        setNameField.setVisibility(View.GONE);
-        setNameButton.setVisibility(View.GONE);
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -701,16 +671,5 @@ public class LoginActivity extends ActionBarActivity implements
     private void loginAnonymously() {
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
-    }
-
-    private void setName(){
-        AuthData authData = mFirebaseRef.getAuth();
-        if (authData != null) {
-            mFirebaseRef.child("users").child(authData.getUid()).child("displayName").setValue(setNameField.getText().toString());
-        } else {
-            Toast.makeText(getApplicationContext(), "No user authenticated",
-                    Toast.LENGTH_LONG).show();
-        }
-
     }
 }

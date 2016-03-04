@@ -15,11 +15,11 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
     }
     @Override
     public void onBackPressed()
     {
-        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
         mFirebaseRef.unauth();
         this.finish();
     }

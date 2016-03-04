@@ -51,8 +51,9 @@
         <activity
             android:name=".RecentActivity"
             android:label="Recent Movies"
-            android:parentActivityName=".ProfileActivity"></activity>
-        <activity android:name=".DVDActivity"></activity>
+            android:parentActivityName=".ProfileActivity" />
+        <activity android:name=".DVDActivity" />
+        <activity android:name=".DetailActivity"></activity>
     </application>
 
 </manifest>

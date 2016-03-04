@@ -1,11 +1,14 @@
 package com.cbk.TechTrollywood;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private Button searchButton;
     private ArrayAdapter<String> mArrayAdapter;
+    private ArrayList<String> idArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +47,24 @@ public class SearchActivity extends AppCompatActivity {
         mArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView movieList = (ListView) findViewById(R.id.movies_search_listView);
         movieList.setAdapter(mArrayAdapter);
+        idArray =new ArrayList<>();
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchMovies();
+            }
+        });
+
+        movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = view.getContext();
+                Intent launchDetail = new Intent(context, DetailActivity.class);
+                ArrayList<String> extraData=new ArrayList<>();
+                extraData.add(mArrayAdapter.getItem(position));
+                extraData.add(idArray.get(position));
+                launchDetail.putStringArrayListExtra("extra", (ArrayList<String>) extraData);
+                startActivity(launchDetail);
             }
         });
 
@@ -66,10 +84,14 @@ public class SearchActivity extends AppCompatActivity {
                 try {
                     JSONArray jMovies = response.getJSONArray("movies");
                     mArrayAdapter.clear();
+                    idArray.clear();
                     for (int i = 0; i < jMovies.length(); i++) {
                         JSONObject movie = jMovies.getJSONObject(i);
                         String title = movie.getString("title");
                         mArrayAdapter.add(title);
+                        String id = movie.getString("id");
+                        idArray.add(id);
+                        //Log.d("TAG",idArray.toString());
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
