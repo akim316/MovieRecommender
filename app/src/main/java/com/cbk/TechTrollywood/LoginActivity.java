@@ -187,7 +187,7 @@ public class LoginActivity extends ActionBarActivity implements
         mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginWithTwitter();
+                //loginWithTwitter();
             }
         });
 
@@ -243,17 +243,12 @@ public class LoginActivity extends ActionBarActivity implements
         /* Create the Firebase ref that is used for all authentication with Firebase */
         mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
 
-        /* Setup the progress dialog that is displayed later when authenticating with Firebase */
-        mAuthProgressDialog = new ProgressDialog(this);
-        mAuthProgressDialog.setTitle("Loading");
-        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
-        mAuthProgressDialog.setCancelable(false);
-        mAuthProgressDialog.show();
-
         mAuthStateListener = new Firebase.AuthStateListener() {
             @Override
             public void onAuthStateChanged(AuthData authData) {
-                mAuthProgressDialog.hide();
+                if (mAuthProgressDialog != null) {
+                    mAuthProgressDialog.dismiss();
+                }
                 setAuthenticatedUser(authData);
             }
         };
@@ -447,14 +442,14 @@ public class LoginActivity extends ActionBarActivity implements
 
         @Override
         public void onAuthenticated(AuthData authData) {
-            mAuthProgressDialog.hide();
+            mAuthProgressDialog.dismiss();
             Log.i(TAG, provider + " auth successful");
             setAuthenticatedUser(authData);
         }
 
         @Override
         public void onAuthenticationError(FirebaseError firebaseError) {
-            mAuthProgressDialog.hide();
+            mAuthProgressDialog.dismiss();
             showErrorDialog(firebaseError.toString());
         }
     }
@@ -536,7 +531,7 @@ public class LoginActivity extends ActionBarActivity implements
                     /* Successfully got OAuth token, now login with Google */
                     mFirebaseRef.authWithOAuthToken("google", token, new AuthResultHandler("google"));
                 } else if (errorMessage != null) {
-                    mAuthProgressDialog.hide();
+                    mAuthProgressDialog.dismiss();
                     showErrorDialog(errorMessage);
                 }
             }
@@ -585,6 +580,11 @@ public class LoginActivity extends ActionBarActivity implements
      **************************************
      */
     public void loginWithPassword() {
+        /* Setup the progress dialog that is displayed later when authenticating with Firebase */
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Loading");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
         mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(), new AuthResultHandler("password") {
             @Override
@@ -649,17 +649,24 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     public void register() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Please wait");
+        mAuthProgressDialog.setMessage("Registering new account with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.show();
         mFirebaseRef.createUser(user.getText().toString(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
                 Toast.makeText(getApplicationContext(), "account created",
                         Toast.LENGTH_LONG).show();
+                mAuthProgressDialog.dismiss();
             }
 
             @Override
             public void onError(FirebaseError firebaseError) {
                 Toast.makeText(getApplicationContext(), firebaseError.getMessage(),
                         Toast.LENGTH_LONG).show();
+                mAuthProgressDialog.dismiss();
             }
         });
     }

@@ -38,22 +38,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Name"
+
         android:id="@+id/profile_name" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Major"
+
         android:id="@+id/profile_major" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:lines="1"
         android:id="@+id/change_name_field" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:lines="1"
         android:id="@+id/change_major_field" />
 
     <Button

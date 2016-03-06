@@ -1,5 +1,7 @@
 package com.cbk.TechTrollywood;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,11 +24,14 @@ public class DetailActivity extends AppCompatActivity {
     ArrayList<String> extraData;
     String rating;
     TextView movieName;
+    ProgressDialog mAuthProgressDialog;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+        context=this;
         movieName=(TextView)findViewById(R.id.movie_name_field);
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         Intent intent = getIntent();
@@ -86,11 +91,17 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
     private void getRating(String id){
+
         AuthData authData = fb.getAuth();
         if (authData != null) {
             fb.child("users").child(authData.getUid()).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    mAuthProgressDialog = new ProgressDialog(context);
+                    mAuthProgressDialog.setTitle("Please wait");
+                    mAuthProgressDialog.setMessage("Fetching data...");
+                    mAuthProgressDialog.setCancelable(false);
+                    mAuthProgressDialog.show();
                     if (snapshot.getValue() != null) {
                         rating = snapshot.getValue().toString();
                         Log.d("TAG", rating);
@@ -118,6 +129,7 @@ public class DetailActivity extends AppCompatActivity {
                                 break;
                         }
                     }
+                    mAuthProgressDialog.dismiss();
                 }
 
                 @Override
@@ -129,5 +141,6 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
+
     }
 }

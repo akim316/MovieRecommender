@@ -1,5 +1,6 @@
 package com.cbk.TechTrollywood;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -34,6 +35,8 @@ public class SearchActivity extends AppCompatActivity {
     private Button searchButton;
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> idArray;
+    /* A dialog that is presented until the Firebase authentication finished. */
+    private ProgressDialog mAuthProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,11 @@ public class SearchActivity extends AppCompatActivity {
 
 
     public void searchMovies() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Please wait");
+        mAuthProgressDialog.setMessage("Searching...");
+        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.show();
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/movies.json")
                 .appendQueryParameter("apikey", API_KEY).appendQueryParameter("q", searchBox.getText().toString())
@@ -93,11 +101,16 @@ public class SearchActivity extends AppCompatActivity {
                         idArray.add(id);
                         //Log.d("TAG",idArray.toString());
                     }
+                    mAuthProgressDialog.hide();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("TAG", e.toString());
                 }
 
+            }
+            public void onFailure(Throwable e) {
+                Log.e("TAG", "OnFailure!", e);
+                mAuthProgressDialog.hide();
             }
 
         });
