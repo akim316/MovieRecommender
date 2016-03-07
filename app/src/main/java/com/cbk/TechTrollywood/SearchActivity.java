@@ -27,9 +27,6 @@ import java.util.ArrayList;
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
-
-    private final static String BASE_URL = "http://api.rottentomatoes.com/api/public/v1.0.json?apikey=";
-    private final static String API_KEY = "yedukp76ffytfuy24zsqk7f5";
     private EditText searchBox;
     private AsyncHttpClient client;
     private Button searchButton;
@@ -78,11 +75,11 @@ public class SearchActivity extends AppCompatActivity {
         mAuthProgressDialog = new ProgressDialog(this);
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Searching...");
-        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.setCancelable(true);
         mAuthProgressDialog.show();
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/movies.json")
-                .appendQueryParameter("apikey", API_KEY).appendQueryParameter("q", searchBox.getText().toString())
+                .appendQueryParameter("apikey", getString(R.string.key)).appendQueryParameter("q", searchBox.getText().toString())
                 .appendQueryParameter("page_limit", "20");
         String url = uri.build().toString();
         //Log.d("TAG", url);

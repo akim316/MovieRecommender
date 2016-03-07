@@ -21,14 +21,13 @@ import cz.msebera.android.httpclient.Header;
 public class DVDActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private ArrayAdapter<String> mArrayAdapter;
-    private final static String API_KEY = "yedukp76ffytfuy24zsqk7f5";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dvd);
         client = new AsyncHttpClient();
-        mArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
+        mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView recentMovies=(ListView)findViewById(R.id.dvd_listview);
         recentMovies.setAdapter(mArrayAdapter);
         getRecent();
@@ -37,7 +36,7 @@ public class DVDActivity extends AppCompatActivity {
     private void getRecent(){
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/lists/dvds/new_releases.json")
-                .appendQueryParameter("apikey", API_KEY);
+                .appendQueryParameter("apikey", getString(R.string.key));
         String url = uri.build().toString();
         Log.d("TAG", url);
         client.get(url.toString(), null, new JsonHttpResponseHandler() {

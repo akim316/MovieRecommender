@@ -36,6 +36,11 @@ public class DetailActivity extends AppCompatActivity {
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         Intent intent = getIntent();
         if (intent != null) {
+            mAuthProgressDialog = new ProgressDialog(context);
+            mAuthProgressDialog.setTitle("Please wait");
+            mAuthProgressDialog.setMessage("Fetching data...");
+            mAuthProgressDialog.setCancelable(false);
+            mAuthProgressDialog.show();
             extraData = intent.getStringArrayListExtra("extra");//[0]=movie name [1]=id
             movieName.setText(extraData.get(0));
             getRating(extraData.get(1));
@@ -84,24 +89,18 @@ public class DetailActivity extends AppCompatActivity {
     private void setRating(int rating, String id){
         AuthData authData = fb.getAuth();
         if (authData != null) {
-            fb.child("users").child(authData.getUid()).child(id).setValue(rating);
+            fb.child("ratings").child(id).child(authData.getUid()).child("rating").setValue(rating);
         } else {
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
     }
     private void getRating(String id){
-
         AuthData authData = fb.getAuth();
         if (authData != null) {
-            fb.child("users").child(authData.getUid()).child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+            fb.child("ratings").child(id).child(authData.getUid()).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    mAuthProgressDialog = new ProgressDialog(context);
-                    mAuthProgressDialog.setTitle("Please wait");
-                    mAuthProgressDialog.setMessage("Fetching data...");
-                    mAuthProgressDialog.setCancelable(false);
-                    mAuthProgressDialog.show();
                     if (snapshot.getValue() != null) {
                         rating = snapshot.getValue().toString();
                         Log.d("TAG", rating);
@@ -129,7 +128,6 @@ public class DetailActivity extends AppCompatActivity {
                                 break;
                         }
                     }
-                    mAuthProgressDialog.dismiss();
                 }
 
                 @Override
@@ -141,6 +139,6 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
-
+        mAuthProgressDialog.dismiss();
     }
 }

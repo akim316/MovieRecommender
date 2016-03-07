@@ -596,6 +596,7 @@ public class LoginActivity extends ActionBarActivity implements
             public void onAuthenticationError(FirebaseError error) {
                 Toast.makeText(getApplicationContext(), error.getMessage(),
                         Toast.LENGTH_LONG).show();
+                mAuthProgressDialog.dismiss();
             }
 
         });
@@ -676,6 +677,10 @@ public class LoginActivity extends ActionBarActivity implements
      **************************************
      */
     private void loginAnonymously() {
+        mAuthProgressDialog = new ProgressDialog(this);
+        mAuthProgressDialog.setTitle("Please wait");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
     }
