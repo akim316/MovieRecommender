@@ -27,6 +27,7 @@ public class ProfileActivityFragment extends Fragment {
     private Button recentDVDs;
     private Button setNameButton;
     private Button setMajorButton;
+    private Button recommendationsButton;
     private TextView profileName;
     private TextView profileMajor;
     private EditText nameField;
@@ -83,6 +84,15 @@ public class ProfileActivityFragment extends Fragment {
             public void onClick(View view) {
                 profileMajor.setText(majorField.getText());
                 setMajor();
+            }
+        });
+
+        recommendationsButton=(Button)view.findViewById(R.id.recommendations_button);
+        recommendationsButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                Intent intent = new Intent(view.getContext(), RecommendedActivity.class);
+                startActivity(intent);
             }
         });
 

@@ -31,25 +31,32 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-        context=this;
-        movieName=(TextView)findViewById(R.id.movie_name_field);
+        context = this;
+        movieName = (TextView) findViewById(R.id.movie_name_field);
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         Intent intent = getIntent();
         if (intent != null) {
-            mAuthProgressDialog = new ProgressDialog(context);
-            mAuthProgressDialog.setTitle("Please wait");
-            mAuthProgressDialog.setMessage("Fetching data...");
-            mAuthProgressDialog.setCancelable(false);
-            mAuthProgressDialog.show();
             extraData = intent.getStringArrayListExtra("extra");//[0]=movie name [1]=id
             movieName.setText(extraData.get(0));
             getRating(extraData.get(1));
             //Log.d("TAG",extraData.toString());
         }
-
-
-
     }
+
+    static boolean active = false;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        active = true;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        active = false;
+    }
+
     public void onRatingClicked(View view) {
         // Check which radio button was clicked
         switch (view.getId()) {
@@ -57,50 +64,59 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(view.getContext(),
                         "You have selected 1",
                         Toast.LENGTH_SHORT).show();
-                setRating(1,extraData.get(1));
+                setRating(1, extraData.get(1));
                 break;
             case R.id.rating_2:
                 Toast.makeText(view.getContext(),
                         "You have selected 2",
                         Toast.LENGTH_SHORT).show();
-                setRating(2,extraData.get(1));
+                setRating(2, extraData.get(1));
                 break;
             case R.id.rating_3:
                 Toast.makeText(view.getContext(),
                         "You have selected 3",
                         Toast.LENGTH_SHORT).show();
-                setRating(3,extraData.get(1));
+                setRating(3, extraData.get(1));
                 break;
             case R.id.rating_4:
                 Toast.makeText(view.getContext(),
                         "You have selected 4",
                         Toast.LENGTH_SHORT).show();
-                setRating(4,extraData.get(1));
+                setRating(4, extraData.get(1));
                 break;
             case R.id.rating_5:
                 Toast.makeText(view.getContext(),
                         "You have selected 5",
                         Toast.LENGTH_SHORT).show();
-                setRating(5,extraData.get(1));
+                setRating(5, extraData.get(1));
                 break;
         }
     }
 
-    private void setRating(int rating, String id){
+    private void setRating(int rating, String id) {
         AuthData authData = fb.getAuth();
         if (authData != null) {
-            fb.child("ratings").child(id).child(authData.getUid()).child("rating").setValue(rating);
+            fb.child("movies").child(id).child("ratings").child(authData.getUid()).child("rating").setValue(rating);
+            fb.child("movies").child(id).child("name").setValue(extraData.get(0));
         } else {
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
     }
-    private void getRating(String id){
+
+    private void getRating(String id) {
         AuthData authData = fb.getAuth();
         if (authData != null) {
-            fb.child("ratings").child(id).child(authData.getUid()).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
+            fb.child("movies").child(id).child("ratings").child(authData.getUid()).child("rating").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
+                    if (active) {
+                        mAuthProgressDialog = new ProgressDialog(context);
+                        mAuthProgressDialog.setTitle("Please wait");
+                        mAuthProgressDialog.setMessage("Fetching data...");
+                        mAuthProgressDialog.setCancelable(false);
+                        mAuthProgressDialog.show();
+                    }
                     if (snapshot.getValue() != null) {
                         rating = snapshot.getValue().toString();
                         Log.d("TAG", rating);
@@ -128,6 +144,9 @@ public class DetailActivity extends AppCompatActivity {
                                 break;
                         }
                     }
+                    if (mAuthProgressDialog != null) {
+                        mAuthProgressDialog.dismiss();
+                    }
                 }
 
                 @Override
@@ -139,6 +158,5 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
-        mAuthProgressDialog.dismiss();
     }
 }
