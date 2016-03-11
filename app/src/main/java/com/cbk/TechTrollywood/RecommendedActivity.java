@@ -3,8 +3,12 @@ package com.cbk.TechTrollywood;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -21,10 +25,13 @@ public class RecommendedActivity extends AppCompatActivity {
     private String userID;
     private int rating;
     private String major;
-    private String myMajor;
+    private String searchMajor;
     private AuthData authData;
-    Boolean movieAdded;
-    ArrayAdapter mArrayAdapter;
+    private EditText majorfield;
+    private Button searchButton;
+    private RatingBar ratingbar;
+    private Boolean movieAdded;
+    private ArrayAdapter mArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,11 +40,27 @@ public class RecommendedActivity extends AppCompatActivity {
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview, new ArrayList<String>());
         ListView recentMovies = (ListView) findViewById(R.id.recommended_listView);
+        majorfield=(EditText) findViewById(R.id.search_major_edittext);
+        searchButton=(Button) findViewById(R.id.recommendation_search_button);
+        ratingbar=(RatingBar) findViewById(R.id.search_ratingbar);
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int rating=Math.round(ratingbar.getRating());
+                String major=majorfield.getText().toString();
+                getRecommendations(major,rating);
+            }
+        });
+
+
         recentMovies.setAdapter(mArrayAdapter);
-        getRecommendations();
+
     }
 
-    public void getRecommendations() {
+    public void getRecommendations(String searchMajorP,int searchRatingP) {
+        final String searchMajor=searchMajorP;
+        final int searchRating=searchRatingP;
         mArrayAdapter.clear();
         authData = fb.getAuth();
         if (authData != null) {
@@ -55,22 +78,9 @@ public class RecommendedActivity extends AppCompatActivity {
                             String s = ratings.child("rating").getValue().toString();
                             rating = Integer.parseInt(s);
                             Object m=snapshot.child("users").child(userID).child("Major").getValue();
-                            Object mym=snapshot.child("users").child(authData.getUid()).child("Major").getValue();
-//                            if(m!=null){
-//                                Log.d("TAG","major");
-//                                Log.d("TAG",m.toString());
-//                            }
-//                            if(mym!=null){
-//                                Log.d("TAG","mymajor");
-//                                Log.d("TAG", mym.toString());
-//                            }
-//                            Log.d("TAG",s);
-                            if(m!=null && mym!=null) {
+                            if(m!=null) {
                                 major = m.toString();
-                                myMajor = mym.toString();
-//                                Log.d("TAG",major);
-//                                Log.d("TAG", myMajor);
-                                if (rating > 3 && major.equalsIgnoreCase(myMajor) && !movieAdded) {
+                                if (rating >= searchRating && major.equalsIgnoreCase(searchMajor) && !movieAdded) {
                                     //Log.d("TAG",movieName);
                                     movieAdded = true;
                                     mArrayAdapter.add(movieName);
