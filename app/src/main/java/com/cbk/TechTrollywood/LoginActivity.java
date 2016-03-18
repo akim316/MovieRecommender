@@ -2,6 +2,7 @@ package com.cbk.TechTrollywood;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
@@ -22,8 +23,10 @@ import com.facebook.CallbackManager;
 import com.facebook.login.LoginManager;
 import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
@@ -56,6 +59,8 @@ public class LoginActivity extends ActionBarActivity implements
         GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
+    private static final int MAX_RETRIES = 3;
+    private static int retries = 0;
 
     /* *************************************
      *              GENERAL                *
@@ -123,8 +128,9 @@ public class LoginActivity extends ActionBarActivity implements
     private Button cancelButton;
     private EditText user;
     private EditText password;
+    private boolean locked;
 
-
+    private Context context;
     /* *************************************
      *            ANONYMOUSLY              *
      ***************************************/
@@ -135,6 +141,8 @@ public class LoginActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         /* Load the view and display it */
         setContentView(R.layout.activity_login);
+        context = this;
+        mAuthProgressDialog = new ProgressDialog(this);
 
         /* *************************************
          *              FACEBOOK               *
@@ -366,39 +374,31 @@ public class LoginActivity extends ActionBarActivity implements
      */
     private void setAuthenticatedUser(AuthData authData) {
         if (authData != null) {
-            Intent intent = new Intent(this, ProfileActivity.class);
-            startActivity(intent);
-            /*
-            //Hide all the login buttons
-            mFacebookLoginButton.setVisibility(View.GONE);
-            mGoogleLoginButton.setVisibility(View.GONE);
-            mTwitterLoginButton.setVisibility(View.GONE);
-            mPasswordLoginButton.setVisibility(View.GONE);
-            mAnonymousLoginButton.setVisibility(View.GONE);
-            registerButton.setVisibility(View.GONE);
-            cancelButton.setVisibility(View.GONE);
-            mLoggedInStatusTextView.setVisibility(View.VISIBLE);
-            user.setVisibility(View.GONE);
-            password.setVisibility(View.GONE);
-            setNameField.setVisibility(View.VISIBLE);
-            setNameButton.setVisibility(View.VISIBLE);
-            // show a provider specific status text
-            String name = null;
-            if (authData.getProvider().equals("facebook")
-                    || authData.getProvider().equals("google")
-                    || authData.getProvider().equals("twitter")) {
-                name = (String) authData.getProviderData().get("displayName");
-            } else if (authData.getProvider().equals("anonymous")
-                    || authData.getProvider().equals("password")) {
-                name = authData.getUid();
-            } else {
-                Log.e(TAG, "Invalid provider: " + authData.getProvider());
-            }
-            if (name != null) {
-                mLoggedInStatusTextView.setText("Logged in as " + name + " (" + authData.getProvider() + ")");
-            }
-            */
+            mAuthProgressDialog.setTitle("Loading");
+            mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+            mAuthProgressDialog.setCancelable(false);
+            mAuthProgressDialog.show();
+            final AuthData fauthData = authData;
+            mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    Boolean isAdmin = (Boolean) snapshot.child("users").child(fauthData.getUid()).child("admin").getValue();
+                    Intent intent;
+                    if (isAdmin != null) {
+                        intent = new Intent(context, adminActivity.class);
+                    } else {
+                        intent = new Intent(context, ProfileActivity.class);
+                    }
+                    startActivity(intent);
+                    mAuthProgressDialog.dismiss();
+                }
 
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    Log.d("TAG", firebaseError.getMessage());
+                    mAuthProgressDialog.dismiss();
+                }
+            });
         } else {
             /* No authenticated user show all the login buttons */
             mFacebookLoginButton.setVisibility(View.VISIBLE);
@@ -411,6 +411,12 @@ public class LoginActivity extends ActionBarActivity implements
             cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
+            mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showLogin();
+                }
+            });
         }
         this.mAuthData = authData;
         /* invalidate options menu to hide/show the logout button */
@@ -581,28 +587,44 @@ public class LoginActivity extends ActionBarActivity implements
      */
     public void loginWithPassword() {
         /* Setup the progress dialog that is displayed later when authenticating with Firebase */
-        mAuthProgressDialog = new ProgressDialog(this);
         mAuthProgressDialog.setTitle("Loading");
         mAuthProgressDialog.setMessage("Authenticating with Firebase...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
+        final String email = user.getText().toString();
         mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(), new AuthResultHandler("password") {
             @Override
             public void onAuthenticated(AuthData authData) {
-                // Authentication just completed successfully :)
+                String userid = authData.getUid();
+                mFirebaseRef.child("users").child(userid).child("email").setValue(email.trim());
+                retries = 0;
+                mAuthProgressDialog.dismiss();
             }
 
             @Override
             public void onAuthenticationError(FirebaseError error) {
-                Toast.makeText(getApplicationContext(), error.getMessage(),
-                        Toast.LENGTH_LONG).show();
+                switch (error.getCode()) {
+                    case FirebaseError.INVALID_PASSWORD:
+                        retries++;
+                        if (retries > MAX_RETRIES) {
+                            lockAccount(email);
+                            retries = 0;
+                        } else {
+                            Toast.makeText(getApplicationContext(), error.getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        break;
+                    default:
+                        Toast.makeText(getApplicationContext(), error.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                        break;
+                }
                 mAuthProgressDialog.dismiss();
             }
-
         });
-
-
+        showLogin();
     }
+
     /* ************************************
      *              REGISTER              *
      **************************************
@@ -612,13 +634,7 @@ public class LoginActivity extends ActionBarActivity implements
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loginWithPassword();
-                mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showLogin();
-                    }
-                });
+                checkedLocked();
             }
 
         });
@@ -650,16 +666,18 @@ public class LoginActivity extends ActionBarActivity implements
     }
 
     public void register() {
-        mAuthProgressDialog = new ProgressDialog(this);
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Registering new account with Firebase...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
-        mFirebaseRef.createUser(user.getText().toString(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
+        mFirebaseRef.createUser(user.getText().toString().trim(), password.getText().toString(), new Firebase.ValueResultHandler<Map<String, Object>>() {
             @Override
             public void onSuccess(Map<String, Object> result) {
                 Toast.makeText(getApplicationContext(), "account created",
                         Toast.LENGTH_LONG).show();
+                String uid=(String)result.get("uid");
+                String email=user.getText().toString().trim();
+                mFirebaseRef.child("users").child(uid).child("email").setValue(email);
                 mAuthProgressDialog.dismiss();
             }
 
@@ -677,11 +695,71 @@ public class LoginActivity extends ActionBarActivity implements
      **************************************
      */
     private void loginAnonymously() {
-        mAuthProgressDialog = new ProgressDialog(this);
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Authenticating with Firebase...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
+    }
+
+    private void lockAccount(String emailP) {
+        mAuthProgressDialog.setTitle("Please wait");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.show();
+        final String email = emailP;
+        mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot user : snapshot.child("users").getChildren()) {
+                    String userid = user.getKey();
+                    String userEmail = user.child("email").getValue().toString();
+                    if (userEmail.equalsIgnoreCase(email.trim()))
+                        mFirebaseRef.child("users").child(userid).child("locked").setValue(true);
+                }
+                mAuthProgressDialog.dismiss();
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("TAG", firebaseError.getMessage());
+                mAuthProgressDialog.dismiss();
+            }
+        });
+
+    }
+
+    private void checkedLocked() {
+        mAuthProgressDialog.setTitle("Please wait");
+        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setCancelable(false);
+        mAuthProgressDialog.show();
+        final String email = user.getText().toString().trim();
+        mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot user : snapshot.child("users").getChildren()) {
+                    String userEmail = user.child("email").getValue().toString();
+                    if (userEmail.equalsIgnoreCase(email)) {
+                        if (user.child("locked").getValue() == null || user.child("locked").getValue() == false) {
+                            loginWithPassword();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Account locked. Please contact the admin",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                }
+                mAuthProgressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("TAG", firebaseError.getMessage());
+                mAuthProgressDialog.dismiss();
+            }
+        });
+
     }
 }

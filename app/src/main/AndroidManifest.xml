@@ -42,7 +42,8 @@
         <activity
             android:name=".ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:parentActivityName=".LoginActivity" />
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_main"
@@ -51,16 +52,24 @@
         <activity
             android:name=".RecentActivity"
             android:label="Recent Movies"
-            android:parentActivityName=".ProfileActivity" />
+            android:parentActivityName=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DVDActivity"
-            android:parentActivityName=".ProfileActivity" />
+            android:parentActivityName=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailActivity"
-            android:parentActivityName=".SearchActivity"/>
+            android:parentActivityName=".SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RecommendedActivity"
-            android:parentActivityName=".ProfileActivity"/>
+            android:parentActivityName=".ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".adminActivity"
+            android:parentActivityName=".LoginActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

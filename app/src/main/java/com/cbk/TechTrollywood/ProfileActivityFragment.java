@@ -95,9 +95,7 @@ public class ProfileActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
-
-
+        
         profileName=(TextView)view.findViewById(R.id.profile_name);
         profileMajor=(TextView)view.findViewById(R.id.profile_major);
         nameField=(EditText)view.findViewById(R.id.change_name_field);
