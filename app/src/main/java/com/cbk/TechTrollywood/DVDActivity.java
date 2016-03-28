@@ -27,7 +27,7 @@ public class DVDActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dvd);
         client = new AsyncHttpClient();
-        mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
+        //mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView recentMovies=(ListView)findViewById(R.id.dvd_listview);
         recentMovies.setAdapter(mArrayAdapter);
         getRecent();

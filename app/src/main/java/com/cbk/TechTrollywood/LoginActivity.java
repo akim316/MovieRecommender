@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,7 +52,7 @@ import java.util.Map;
  * Email/Password is provided using {@link com.firebase.client.Firebase}
  * Anonymous is provided using {@link com.firebase.client.Firebase}
  */
-public class LoginActivity extends ActionBarActivity implements
+public class LoginActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
@@ -135,126 +136,126 @@ public class LoginActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         /* Load the view and display it */
         setContentView(R.layout.activity_login);
-
-        /* *************************************
-         *              FACEBOOK               *
-         ***************************************/
-        /* Load the Facebook login button and set up the tracker to monitor access token changes */
-        mFacebookCallbackManager = CallbackManager.Factory.create();
-        mFacebookLoginButton = (LoginButton) findViewById(R.id.login_with_facebook);
-        mFacebookAccessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
-                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
-                LoginActivity.this.onFacebookAccessTokenChange(currentAccessToken);
-            }
-        };
-
-        /* *************************************
-         *               GOOGLE                *
-         ***************************************/
-        /* Load the Google login button */
-        mGoogleLoginButton = (SignInButton) findViewById(R.id.login_with_google);
-        mGoogleLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mGoogleLoginClicked = true;
-                if (!mGoogleApiClient.isConnecting()) {
-                    if (mGoogleConnectionResult != null) {
-                        resolveSignInError();
-                    } else if (mGoogleApiClient.isConnected()) {
-                        getGoogleOAuthTokenAndLogin();
-                    } else {
-                    /* connect API now */
-                        Log.d(TAG, "Trying to connect to Google API");
-                        mGoogleApiClient.connect();
-                    }
-                }
-            }
-        });
-        /* Setup the Google API object to allow Google+ logins */
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(Plus.API)
-                .addScope(Plus.SCOPE_PLUS_LOGIN)
-                .build();
-
-        /* *************************************
-         *                TWITTER              *
-         ***************************************/
-        mTwitterLoginButton = (Button) findViewById(R.id.login_with_twitter);
-        mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //loginWithTwitter();
-            }
-        });
-
-        /* *************************************
-         *               PASSWORD              *
-         ***************************************/
-        mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
-        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showLogin();
-            }
-        });
-
-        cancelButton = (Button) findViewById(R.id.Cancel);
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                cancel();
-            }
-        });
-        /* *************************************
-         *               REGISTER              *
-         ***************************************/
-        user = (EditText) findViewById(R.id.username_field);
-        password = (EditText) findViewById(R.id.password_field);
-        registerButton = (Button) findViewById(R.id.register);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                register();
-            }
-        });
-
-
-        /* *************************************
-         *              ANONYMOUSLY            *
-         ***************************************/
-        /* Load and setup the anonymous login button */
-        mAnonymousLoginButton = (Button) findViewById(R.id.login_anonymously);
-        mAnonymousLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginAnonymously();
-            }
-        });
-
-        /* *************************************
-         *               GENERAL               *
-         ***************************************/
-        mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
-
-        /* Create the Firebase ref that is used for all authentication with Firebase */
-        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
-
-        mAuthStateListener = new Firebase.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(AuthData authData) {
-                if (mAuthProgressDialog != null) {
-                    mAuthProgressDialog.dismiss();
-                }
-                setAuthenticatedUser(authData);
-            }
-        };
-        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
-         * user and hide hide any login buttons */
-        mFirebaseRef.addAuthStateListener(mAuthStateListener);
+//
+//        /* *************************************
+//         *              FACEBOOK               *
+//         ***************************************/
+//        /* Load the Facebook login button and set up the tracker to monitor access token changes */
+//        mFacebookCallbackManager = CallbackManager.Factory.create();
+//        //mFacebookLoginButton = (LoginButton) findViewById(R.id.login_with_facebook);
+//        mFacebookAccessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken currentAccessToken) {
+//                Log.i(TAG, "Facebook.AccessTokenTracker.OnCurrentAccessTokenChanged");
+//                LoginActivity.this.onFacebookAccessTokenChange(currentAccessToken);
+//            }
+//        };
+//
+//        /* *************************************
+//         *               GOOGLE                *
+//         ***************************************/
+//        /* Load the Google login button */
+//        //mGoogleLoginButton = (SignInButton) findViewById(R.id.login_with_google);
+//        mGoogleLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                mGoogleLoginClicked = true;
+//                if (!mGoogleApiClient.isConnecting()) {
+//                    if (mGoogleConnectionResult != null) {
+//                        resolveSignInError();
+//                    } else if (mGoogleApiClient.isConnected()) {
+//                        getGoogleOAuthTokenAndLogin();
+//                    } else {
+//                    /* connect API now */
+//                        Log.d(TAG, "Trying to connect to Google API");
+//                        mGoogleApiClient.connect();
+//                    }
+//                }
+//            }
+//        });
+//        /* Setup the Google API object to allow Google+ logins */
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addConnectionCallbacks(this)
+//                .addOnConnectionFailedListener(this)
+//                .addApi(Plus.API)
+//                .addScope(Plus.SCOPE_PLUS_LOGIN)
+//                .build();
+//
+//        /* *************************************
+//         *                TWITTER              *
+//         ***************************************/
+//        //mTwitterLoginButton = (Button) findViewById(R.id.login_with_twitter);
+//        mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //loginWithTwitter();
+//            }
+//        });
+//
+//        /* *************************************
+//         *               PASSWORD              *
+//         ***************************************/
+//        //mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
+//        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                showLogin();
+//            }
+//        });
+//
+//        //cancelButton = (Button) findViewById(R.id.Cancel);
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                cancel();
+//            }
+//        });
+//        /* *************************************
+//         *               REGISTER              *
+//         ***************************************/
+//        //user = (EditText) findViewById(R.id.username_field);
+//        //password = (EditText) findViewById(R.id.password_field);
+//        //registerButton = (Button) findViewById(R.id.register);
+//        registerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                register();
+//            }
+//        });
+//
+//
+//        /* *************************************
+//         *              ANONYMOUSLY            *
+//         ***************************************/
+//        /* Load and setup the anonymous login button */
+//        //mAnonymousLoginButton = (Button) findViewById(R.id.login_anonymously);
+//        mAnonymousLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                loginAnonymously();
+//            }
+//        });
+//
+//        /* *************************************
+//         *               GENERAL               *
+//         ***************************************/
+//       // mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
+//
+//        /* Create the Firebase ref that is used for all authentication with Firebase */
+//        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+//
+//        mAuthStateListener = new Firebase.AuthStateListener() {
+//            @Override
+//            public void onAuthStateChanged(AuthData authData) {
+//                if (mAuthProgressDialog != null) {
+//                    mAuthProgressDialog.dismiss();
+//                }
+//                setAuthenticatedUser(authData);
+//            }
+//        };
+//        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
+//         * user and hide hide any login buttons */
+//        mFirebaseRef.addAuthStateListener(mAuthStateListener);
     }
 
     @Override

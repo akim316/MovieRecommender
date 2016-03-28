@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -23,6 +24,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -30,8 +32,10 @@ public class SearchActivity extends AppCompatActivity {
     private EditText searchBox;
     private AsyncHttpClient client;
     private Button searchButton;
-    private ArrayAdapter<String> mArrayAdapter;
+    private ListView listView;
+    private CustomListAdapter movieListAdapter;
     private ArrayList<String> idArray;
+    private List<Movie> movies = new ArrayList<Movie>();
     /* A dialog that is presented until the Firebase authentication finished. */
     private ProgressDialog mAuthProgressDialog;
 
@@ -39,15 +43,17 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         client = new AsyncHttpClient();
         searchButton = (Button) findViewById(R.id.search_button);
         searchBox = (EditText) findViewById(R.id.search_box);
-        mArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
-        ListView movieList = (ListView) findViewById(R.id.movies_search_listView);
-        movieList.setAdapter(mArrayAdapter);
-        idArray =new ArrayList<>();
+        movieListAdapter = new CustomListAdapter(this, movies);
+        listView = (ListView) findViewById(R.id.list);
+        listView.setAdapter(movieListAdapter);
+        idArray = new ArrayList<>();
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,13 +61,13 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        movieList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Context context = view.getContext();
                 Intent launchDetail = new Intent(context, DetailActivity.class);
-                ArrayList<String> extraData=new ArrayList<>();
-                extraData.add(mArrayAdapter.getItem(position));
+                ArrayList<String> extraData = new ArrayList<>();
+                extraData.add(((Movie) movieListAdapter.getItem(position)).getTitle());
                 extraData.add(idArray.get(position));
                 launchDetail.putStringArrayListExtra("extra", (ArrayList<String>) extraData);
                 startActivity(launchDetail);
@@ -88,22 +94,38 @@ public class SearchActivity extends AppCompatActivity {
                 // If the response is JSONObject instead of expected JSONArray
                 try {
                     JSONArray jMovies = response.getJSONArray("movies");
-                    mArrayAdapter.clear();
+                    movies.clear();
                     idArray.clear();
+                    if (jMovies.length() == 0) {
+                        Toast toast = Toast.makeText(getApplicationContext(), "No movies found", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
                     for (int i = 0; i < jMovies.length(); i++) {
-                        JSONObject movie = jMovies.getJSONObject(i);
-                        String title = movie.getString("title");
-                        mArrayAdapter.add(title);
-                        String id = movie.getString("id");
+                        JSONObject movieObj = jMovies.getJSONObject(i);
+                        Movie movie = new Movie();
+                        movie.setTitle(movieObj.getString("title"));
+                        String id = movieObj.getString("id");
+                        movie.setId(Integer.valueOf(id));
+                        String year = movieObj.getString("year");
+                        if (!year.equals("")) {
+                            movie.setYear(Integer.valueOf(year));
+                        }
+                        JSONObject ratings = movieObj.getJSONObject("ratings");
+                        movie.setRating(Integer.valueOf(ratings.getString("audience_score")));
+                        String critics = ratings.getString("critics_score");
+                        movie.setRating2(Integer.valueOf(critics));
+
+                        JSONObject posters = movieObj.getJSONObject("posters");
+                        movie.setThumbnailUrl(posters.getString("thumbnail"));
+                        movies.add(movie);
                         idArray.add(id);
-                        //Log.d("TAG",idArray.toString());
                     }
                     mAuthProgressDialog.hide();
                 } catch (JSONException e) {
                     e.printStackTrace();
                     Log.d("TAG", e.toString());
                 }
-
+                movieListAdapter.notifyDataSetChanged();
             }
             public void onFailure(Throwable e) {
                 Log.e("TAG", "OnFailure!", e);

@@ -27,7 +27,7 @@ public class RecentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recent);
         client = new AsyncHttpClient();
-        mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
+        //mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView recentMovies=(ListView)findViewById(R.id.recent_movies_listview);
         recentMovies.setAdapter(mArrayAdapter);
         getRecent();
