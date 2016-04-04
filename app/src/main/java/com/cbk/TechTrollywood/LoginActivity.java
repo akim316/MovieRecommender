@@ -124,6 +124,7 @@ public class LoginActivity extends AppCompatActivity implements
     private Button cancelButton;
     private EditText user;
     private EditText password;
+    private TextView signupButton;
 
 
     /* *************************************
@@ -136,6 +137,14 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         /* Load the view and display it */
         setContentView(R.layout.activity_login);
+        registerButton = (Button) findViewById(R.id.register);
+        registerButton.setVisibility(View.GONE);
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                register();
+            }
+        });
 //
 //        /* *************************************
 //         *              FACEBOOK               *
@@ -195,13 +204,13 @@ public class LoginActivity extends AppCompatActivity implements
 //        /* *************************************
 //         *               PASSWORD              *
 //         ***************************************/
-//        //mPasswordLoginButton = (Button) findViewById(R.id.login_with_password);
-//        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showLogin();
-//            }
-//        });
+        mPasswordLoginButton = (Button) findViewById(R.id.btn_login);
+        mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginWithPassword();
+            }
+        });
 //
 //        //cancelButton = (Button) findViewById(R.id.Cancel);
 //        cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -213,15 +222,18 @@ public class LoginActivity extends AppCompatActivity implements
 //        /* *************************************
 //         *               REGISTER              *
 //         ***************************************/
-//        //user = (EditText) findViewById(R.id.username_field);
-//        //password = (EditText) findViewById(R.id.password_field);
-//        //registerButton = (Button) findViewById(R.id.register);
-//        registerButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                register();
-//            }
-//        });
+        signupButton = (TextView) findViewById(R.id.link_signup);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPasswordLoginButton.setVisibility(View.GONE);
+                registerButton.setVisibility(View.VISIBLE);
+                signupButton.setVisibility(View.GONE);
+            }
+        });
+        user = (EditText) findViewById(R.id.input_email);
+        password = (EditText) findViewById(R.id.input_password);
+
 //
 //
 //        /* *************************************
@@ -239,23 +251,23 @@ public class LoginActivity extends AppCompatActivity implements
 //        /* *************************************
 //         *               GENERAL               *
 //         ***************************************/
-//       // mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
-//
-//        /* Create the Firebase ref that is used for all authentication with Firebase */
-//        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
-//
-//        mAuthStateListener = new Firebase.AuthStateListener() {
-//            @Override
-//            public void onAuthStateChanged(AuthData authData) {
-//                if (mAuthProgressDialog != null) {
-//                    mAuthProgressDialog.dismiss();
-//                }
-//                setAuthenticatedUser(authData);
-//            }
-//        };
-//        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
-//         * user and hide hide any login buttons */
-//        mFirebaseRef.addAuthStateListener(mAuthStateListener);
+        //mLoggedInStatusTextView = (TextView) findViewById(R.id.login_status);
+
+        /* Create the Firebase ref that is used for all authentication with Firebase */
+        mFirebaseRef = new Firebase(getResources().getString(R.string.firebase_url));
+
+        mAuthStateListener = new Firebase.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(AuthData authData) {
+                if (mAuthProgressDialog != null) {
+                    mAuthProgressDialog.dismiss();
+                }
+                setAuthenticatedUser(authData);
+            }
+        };
+        /* Check if the user is authenticated with Firebase already. If this is the case we can set the authenticated
+         * user and hide hide any login buttons */
+        mFirebaseRef.addAuthStateListener(mAuthStateListener);
     }
 
     @Override
@@ -402,14 +414,14 @@ public class LoginActivity extends AppCompatActivity implements
 
         } else {
             /* No authenticated user show all the login buttons */
-            mFacebookLoginButton.setVisibility(View.VISIBLE);
-            mGoogleLoginButton.setVisibility(View.VISIBLE);
-            mTwitterLoginButton.setVisibility(View.VISIBLE);
+//            mFacebookLoginButton.setVisibility(View.VISIBLE);
+//            mGoogleLoginButton.setVisibility(View.VISIBLE);
+//            mTwitterLoginButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
-            mAnonymousLoginButton.setVisibility(View.VISIBLE);
+//            mAnonymousLoginButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.VISIBLE);
-            mLoggedInStatusTextView.setVisibility(View.GONE);
-            cancelButton.setVisibility(View.GONE);
+//            mLoggedInStatusTextView.setVisibility(View.GONE);
+//            cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
         }
@@ -623,14 +635,14 @@ public class LoginActivity extends AppCompatActivity implements
             }
 
         });
-        mFacebookLoginButton.setVisibility(View.GONE);
-        mGoogleLoginButton.setVisibility(View.GONE);
-        mTwitterLoginButton.setVisibility(View.GONE);
+//        mFacebookLoginButton.setVisibility(View.GONE);
+//        mGoogleLoginButton.setVisibility(View.GONE);
+//        mTwitterLoginButton.setVisibility(View.GONE);
         mPasswordLoginButton.setVisibility(View.VISIBLE);
-        mAnonymousLoginButton.setVisibility(View.GONE);
+//        mAnonymousLoginButton.setVisibility(View.GONE);
         registerButton.setVisibility(View.GONE);
-        mLoggedInStatusTextView.setVisibility(View.GONE);
-        cancelButton.setVisibility(View.VISIBLE);
+//        mLoggedInStatusTextView.setVisibility(View.GONE);
+//        cancelButton.setVisibility(View.VISIBLE);
     }
 
     private void cancel() {

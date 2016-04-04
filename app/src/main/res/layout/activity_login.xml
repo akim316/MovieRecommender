@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
-                android:hint="Email" />
+                android:hint="Email1" />
         </android.support.design.widget.TextInputLayout>
 
         <!-- Password Label -->
@@ -53,13 +53,22 @@
             android:padding="12dp"
             android:text="Login"/>
 
+        <android.support.v7.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Register"
+            android:id="@+id/register"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible" />
+
         <TextView android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="No account yet? Create one"
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="16dip"
+            android:clickable="true"/>
 
     </LinearLayout>
 </ScrollView>
