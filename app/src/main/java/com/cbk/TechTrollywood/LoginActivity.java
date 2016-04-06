@@ -742,7 +742,7 @@ public class LoginActivity extends ActionBarActivity implements
                 for (DataSnapshot user : snapshot.child("users").getChildren()) {
                     String userEmail = user.child("email").getValue().toString();
                     if (userEmail.equalsIgnoreCase(email)) {
-                        if (user.child("locked").getValue() == null || user.child("locked").getValue() == false) {
+                        if (user.child("locked").getValue() == null || (boolean)user.child("locked").getValue() == false) {
                             loginWithPassword();
                         } else {
                             Toast.makeText(getApplicationContext(), "Account locked. Please contact the admin",
