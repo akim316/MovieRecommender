@@ -17,6 +17,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -33,6 +35,8 @@ import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.plus.Plus;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -121,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements
      ***************************************/
     private Button mPasswordLoginButton;
     private Button registerButton;
-    private Button cancelButton;
+    private EditText name;
     private EditText user;
     private EditText password;
     private TextView signupButton;
@@ -137,14 +141,40 @@ public class LoginActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         /* Load the view and display it */
         setContentView(R.layout.activity_login);
-        registerButton = (Button) findViewById(R.id.register);
+        registerButton = (Button) findViewById(R.id.btn_register);
         registerButton.setVisibility(View.GONE);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View v) {
                 register();
             }
         });
+
+        name = (EditText) findViewById(R.id.input_name);
+        name.setVisibility(View.GONE);
+
+        signupButton = (TextView) findViewById(R.id.link_signup);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerButton.setVisibility(View.VISIBLE);
+                name.setVisibility(View.VISIBLE);
+                name.requestFocus();
+                YoYo.with(Techniques.FadeInUp).duration(800).playOn(findViewById(R.id.btn_register));
+                YoYo.with(Techniques.FadeInUp).duration(800).playOn(findViewById(R.id.input_name));
+                YoYo.with(Techniques.FadeOut).duration(300).playOn(findViewById(R.id.btn_login));
+                YoYo.with(Techniques.FadeOut).duration(300).playOn(findViewById(R.id.link_signup));
+
+            }
+        });
+//        registerButton = (Button) findViewById(R.id.register);
+//        registerButton.setVisibility(View.GONE);
+//        registerButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                register();
+//            }
+//        });
 //
 //        /* *************************************
 //         *              FACEBOOK               *
@@ -222,15 +252,15 @@ public class LoginActivity extends AppCompatActivity implements
 //        /* *************************************
 //         *               REGISTER              *
 //         ***************************************/
-        signupButton = (TextView) findViewById(R.id.link_signup);
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPasswordLoginButton.setVisibility(View.GONE);
-                registerButton.setVisibility(View.VISIBLE);
-                signupButton.setVisibility(View.GONE);
-            }
-        });
+//        signupButton = (TextView) findViewById(R.id.link_signup);
+//        signupButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPasswordLoginButton.setVisibility(View.GONE);
+//                registerButton.setVisibility(View.VISIBLE);
+//                signupButton.setVisibility(View.GONE);
+//            }
+//        });
         user = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
 
@@ -419,7 +449,7 @@ public class LoginActivity extends AppCompatActivity implements
 //            mTwitterLoginButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
 //            mAnonymousLoginButton.setVisibility(View.VISIBLE);
-            registerButton.setVisibility(View.VISIBLE);
+//            registerButton.setVisibility(View.VISIBLE);
 //            mLoggedInStatusTextView.setVisibility(View.GONE);
 //            cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
@@ -640,7 +670,7 @@ public class LoginActivity extends AppCompatActivity implements
 //        mTwitterLoginButton.setVisibility(View.GONE);
         mPasswordLoginButton.setVisibility(View.VISIBLE);
 //        mAnonymousLoginButton.setVisibility(View.GONE);
-        registerButton.setVisibility(View.GONE);
+// registerButton.setVisibility(View.GONE);
 //        mLoggedInStatusTextView.setVisibility(View.GONE);
 //        cancelButton.setVisibility(View.VISIBLE);
     }
@@ -651,9 +681,9 @@ public class LoginActivity extends AppCompatActivity implements
         mTwitterLoginButton.setVisibility(View.VISIBLE);
         mPasswordLoginButton.setVisibility(View.VISIBLE);
         mAnonymousLoginButton.setVisibility(View.VISIBLE);
-        registerButton.setVisibility(View.VISIBLE);
+        //registerButton.setVisibility(View.VISIBLE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
-        cancelButton.setVisibility(View.GONE);
+        //cancelButton.setVisibility(View.GONE);
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
