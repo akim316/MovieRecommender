@@ -20,6 +20,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:hint="Search for movies"
+        android:singleLine="true"
         android:layout_toLeftOf="@+id/search_button"
         android:layout_toStartOf="@+id/search_button" />
 

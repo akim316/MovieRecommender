@@ -49,6 +49,14 @@
 
         android:id="@+id/profile_name" />
 
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:lines="1"
+        android:id="@+id/change_name_field"
+        android:hint="New name" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,19 +64,15 @@
 
         android:id="@+id/profile_major" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:lines="1"
-        android:id="@+id/change_name_field" />
+
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
         android:lines="1"
-        android:id="@+id/change_major_field" />
+        android:id="@+id/change_major_field"
+        android:hint="New major" />
 
     <Button
         style="?android:attr/buttonStyleSmall"

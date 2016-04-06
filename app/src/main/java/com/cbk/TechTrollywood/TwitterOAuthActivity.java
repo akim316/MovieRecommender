@@ -23,7 +23,7 @@ import twitter4j.conf.ConfigurationBuilder;
  * 1. Using twitter4j, get the request token, request token secret, and oauth verifier
  * 2. Open a web view for the user to give the application access
  * 3. Using twitter4j, get the authentication token, secret, and user id with a accepted request token
- * 4. Return to the {@link com.firebase.samples.logindemo.MainActivity} with the new access token
+ * 4. Return to the  with the new access token
  */
 public class TwitterOAuthActivity extends Activity {
 

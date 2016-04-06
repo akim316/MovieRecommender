@@ -675,10 +675,11 @@ public class LoginActivity extends ActionBarActivity implements
             public void onSuccess(Map<String, Object> result) {
                 Toast.makeText(getApplicationContext(), "account created",
                         Toast.LENGTH_LONG).show();
-                String uid=(String)result.get("uid");
-                String email=user.getText().toString().trim();
+                String uid = (String) result.get("uid");
+                String email = user.getText().toString().trim();
                 mFirebaseRef.child("users").child(uid).child("email").setValue(email);
                 mAuthProgressDialog.dismiss();
+                showLogin();
             }
 
             @Override
@@ -704,7 +705,7 @@ public class LoginActivity extends ActionBarActivity implements
 
     private void lockAccount(String emailP) {
         mAuthProgressDialog.setTitle("Please wait");
-        mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+        mAuthProgressDialog.setMessage("Locking your account...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
         final String email = emailP;
@@ -739,17 +740,25 @@ public class LoginActivity extends ActionBarActivity implements
         mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                boolean loggedIn = false;
                 for (DataSnapshot user : snapshot.child("users").getChildren()) {
-                    String userEmail = user.child("email").getValue().toString();
-                    if (userEmail.equalsIgnoreCase(email)) {
-                        if (user.child("locked").getValue() == null || user.child("locked").getValue() == false) {
-                            loginWithPassword();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "Account locked. Please contact the admin",
-                                    Toast.LENGTH_LONG).show();
+                    if (user.child("email").getValue() != null) {
+                        String userEmail = user.child("email").getValue().toString();
+                        if (userEmail.equalsIgnoreCase(email)) {
+                            if (user.child("locked").getValue() == null || user.child("locked").getValue() == false) {
+                                loginWithPassword();
+                                loggedIn = true;
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Account locked. Please contact the admin",
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
 
+                }
+                if (loggedIn == false) {
+                    Toast.makeText(getApplicationContext(), "Email not found or incorrect",
+                            Toast.LENGTH_LONG).show();
                 }
                 mAuthProgressDialog.dismiss();
             }

@@ -33,6 +33,7 @@ public class SearchActivity extends AppCompatActivity {
     private ArrayAdapter<String> mArrayAdapter;
     private ArrayList<String> idArray;
     /* A dialog that is presented until the Firebase authentication finished. */
+
     private ProgressDialog mAuthProgressDialog;
 
     @Override
