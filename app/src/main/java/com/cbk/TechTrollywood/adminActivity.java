@@ -61,13 +61,6 @@ public class adminActivity extends AppCompatActivity {
         private boolean checked = false;
         private String uid = "";
 
-        public User() {
-        }
-
-        public User(String name) {
-            this.name = name;
-        }
-
         public User(String name, String uid, boolean checked) {
             this.name = name;
             this.checked = checked;
