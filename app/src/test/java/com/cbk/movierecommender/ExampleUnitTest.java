@@ -3,6 +3,10 @@ package com.cbk.movierecommender;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
+<<<<<<< HEAD
+=======
+import static org.junit.Assert.*;
+>>>>>>> d2f2803a781b6632e4afc178293e26f93908f359
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.
