@@ -3,6 +3,7 @@ package com.cbk.TechTrollywood;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,6 @@ import com.firebase.client.ValueEventListener;
  */
 public class ProfileActivityFragment extends Fragment {
     private Firebase fb;
-    private Button searchMovies;
-    private Button recentMovies;
-    private Button recentDVDs;
-    private Button setNameButton;
-    private Button setMajorButton;
-    private Button recommendationsButton;
     private TextView profileName;
     private TextView profileMajor;
     private EditText nameField;
@@ -43,7 +38,7 @@ public class ProfileActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_profile, container, false);
         fb = new Firebase(getResources().getString(R.string.firebase_url));
-        searchMovies = (Button) view.findViewById(R.id.search_movies_button);
+        Button searchMovies = (Button) view.findViewById(R.id.search_movies_button);
         searchMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -52,7 +47,7 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
-        recentMovies=(Button) view.findViewById(R.id.recent_movies_button);
+        Button recentMovies=(Button) view.findViewById(R.id.recent_movies_button);
         recentMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +56,7 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
-        recentDVDs=(Button) view.findViewById(R.id.recent_dvds_button);
+        Button recentDVDs=(Button) view.findViewById(R.id.recent_dvds_button);
         recentDVDs.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,7 +65,7 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
-        setNameButton=(Button)view.findViewById(R.id.set_name_button);
+        Button setNameButton=(Button)view.findViewById(R.id.set_name_button);
         setNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -78,7 +73,8 @@ public class ProfileActivityFragment extends Fragment {
                 setName();
             }
         });
-        setMajorButton=(Button)view.findViewById(R.id.set_major_button);
+
+        Button setMajorButton=(Button)view.findViewById(R.id.set_major_button);
         setMajorButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +83,7 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
-        recommendationsButton=(Button)view.findViewById(R.id.recommendations_button);
+        Button recommendationsButton=(Button)view.findViewById(R.id.recommendations_button);
         recommendationsButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -139,7 +135,7 @@ public class ProfileActivityFragment extends Fragment {
 
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
-                    System.out.println("The read failed: " + firebaseError.getMessage());
+                    Log.d("ProfileActivity", "The read failed: " + firebaseError.getMessage());
                 }
             });
         }

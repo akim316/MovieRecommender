@@ -11,7 +11,7 @@ import com.firebase.client.Firebase;
  * @author mimming
  * @since 12/17/14
  */
-public class ttApplication extends Application {
+public class TtApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();

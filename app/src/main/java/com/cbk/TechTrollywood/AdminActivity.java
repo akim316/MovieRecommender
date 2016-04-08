@@ -21,7 +21,7 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class adminActivity extends AppCompatActivity {
+public class AdminActivity extends AppCompatActivity {
     private ArrayAdapter<User> listAdapter;
     private static Firebase fb;
 
@@ -163,7 +163,7 @@ public class adminActivity extends AppCompatActivity {
 
             // Create a new row view
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.checked_list_item, null);
+                convertView = inflater.inflate(R.layout.checked_list_item, parent);
 
                 // Find the child views.
                 textView = (TextView) convertView.findViewById(R.id.rowTextView);
