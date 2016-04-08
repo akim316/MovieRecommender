@@ -10,6 +10,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -22,11 +23,14 @@ android {
         exclude 'META-INF/NOTICE' // will not include NOTICE file
         exclude 'META-INF/LICENSE' // will not include LICENSE file
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.android.support:design:23.2.0'
     compile 'com.firebase:firebase-client-android:2.5.0+'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-plus:8.4.0'
@@ -36,4 +40,6 @@ dependencies {
     compile 'com.mcxiaoke.volley:library:1.0.19'
     compile files('libs/android-async-http-1.4.9.jar')
     compile files('libs/httpclient-4.4.1.1.jar')
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.+'
 }

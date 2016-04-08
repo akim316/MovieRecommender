@@ -111,7 +111,6 @@ public class ProfileActivityFragment extends Fragment {
             Toast.makeText(getContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();
         }
-
     }
     private void setMajor(){
         AuthData authData = fb.getAuth();
