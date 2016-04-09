@@ -21,7 +21,10 @@ import com.firebase.client.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class adminActivity extends AppCompatActivity {
+/**
+ * activity for admin
+ */
+public class AdminActivity extends AppCompatActivity {
     private ArrayAdapter<User> listAdapter;
     private static Firebase fb;
 
@@ -61,40 +64,77 @@ public class adminActivity extends AppCompatActivity {
         private boolean checked = false;
         private String uid = "";
 
+        /**
+         * constructor for user
+         * @param name name of the user
+         * @param uid uid of the user
+         * @param checked if the user's checkbox in line is checked
+         */
         public User(String name, String uid, boolean checked) {
             this.name = name;
             this.checked = checked;
             this.uid = uid;
         }
 
+        /**
+         * getter for uid
+         * @return uid
+         */
         public String getUid() {
             return uid;
         }
 
+        /**
+         * setter for uid
+         * @param uid uid
+         */
         public void setUid(String uid) {
             this.uid = uid;
         }
 
+        /**
+         * getter for user name
+         * @return name
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * setter for user name
+         * @param name name
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * returns checked variable
+         * @return checked
+         */
         public boolean isChecked() {
             return checked;
         }
 
+        /**
+         * sets the checked variable
+         * @param checked checked variable to set
+         */
         public void setChecked(boolean checked) {
             this.checked = checked;
         }
 
+        /**
+         * returns name
+         * @return name
+         */
         public String toString() {
             return name;
         }
 
+        /**
+         * toggles the check variable
+         */
         public void toggleChecked() {
             checked = !checked;
         }
@@ -107,26 +147,45 @@ public class adminActivity extends AppCompatActivity {
         private CheckBox checkBox;
         private TextView textView;
 
-        public UserViewHolder() {
-        }
 
+        /**
+         * constructor for userviewholder
+         * @param textView textview it should go in
+         * @param checkBox checkbox ui element
+         */
         public UserViewHolder(TextView textView, CheckBox checkBox) {
             this.checkBox = checkBox;
             this.textView = textView;
         }
 
+        /**
+         * returns checkbox element
+         * @return checkbox element
+         */
         public CheckBox getCheckBox() {
             return checkBox;
         }
 
+        /**
+         * sets the checkbox elment
+         * @param checkBox checkbox
+         */
         public void setCheckBox(CheckBox checkBox) {
             this.checkBox = checkBox;
         }
 
+        /**
+         * returns textview
+         * @return textview
+         */
         public TextView getTextView() {
             return textView;
         }
 
+        /**
+         * sets the textview
+         * @param textView textview
+         */
         public void setTextView(TextView textView) {
             this.textView = textView;
         }
@@ -139,6 +198,11 @@ public class adminActivity extends AppCompatActivity {
 
         private LayoutInflater inflater;
 
+        /**
+         * custom adapter constructor
+         * @param context current context
+         * @param userList list of users
+         */
         public UserArrayAdapter(Context context, List<User> userList) {
             super(context, R.layout.checked_list_item, R.id.rowTextView, userList);
             // Cache the LayoutInflate to avoid asking for a new one each time.
@@ -156,7 +220,7 @@ public class adminActivity extends AppCompatActivity {
 
             // Create a new row view
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.checked_list_item, null);
+                convertView = inflater.inflate(R.layout.checked_list_item, parent);
 
                 // Find the child views.
                 textView = (TextView) convertView.findViewById(R.id.rowTextView);
@@ -197,6 +261,9 @@ public class adminActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * populates the user list from firebase
+     */
     private void populateUserList() {
         fb.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -218,6 +285,7 @@ public class adminActivity extends AppCompatActivity {
             }
         });
     }
+
     public void onBackPressed()
     {
         fb.unauth();

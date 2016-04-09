@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * activity for showing recent DVDs
+ */
 public class DVDActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private ArrayAdapter<String> mArrayAdapter;
@@ -39,7 +42,7 @@ public class DVDActivity extends AppCompatActivity {
                 .appendQueryParameter("apikey", getString(R.string.key));
         String url = uri.build().toString();
         Log.d("TAG", url);
-        client.get(url.toString(), null, new JsonHttpResponseHandler() {
+        client.get(url, null, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 try {
@@ -51,7 +54,6 @@ public class DVDActivity extends AppCompatActivity {
                         mArrayAdapter.add(title);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     Log.d("TAG", e.toString());
                 }
 

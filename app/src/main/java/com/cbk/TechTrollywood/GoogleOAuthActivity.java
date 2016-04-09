@@ -84,7 +84,7 @@ public class GoogleOAuthActivity extends Activity implements
     private void getGoogleOAuthTokenAndLogin() {
         /* Get OAuth token in Background */
         AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-            String errorMessage = null;
+            private String errorMessage = null;
 
             @Override
             protected String doInBackground(Void... params) {
@@ -92,7 +92,8 @@ public class GoogleOAuthActivity extends Activity implements
 
                 try {
                     String scope = String.format("oauth2:%s", Scopes.PLUS_LOGIN);
-                    token = GoogleAuthUtil.getToken(GoogleOAuthActivity.this, Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
+                    token = GoogleAuthUtil.getToken(GoogleOAuthActivity.this,
+                            Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
                 } catch (IOException transientEx) {
                     /* Network or server error */
                     Log.e(TAG, "Error authenticating with Google: " + transientEx);
