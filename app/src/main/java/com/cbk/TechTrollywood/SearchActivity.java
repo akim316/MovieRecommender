@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         client = new AsyncHttpClient();
         Button searchButton = (Button) findViewById(R.id.search_button);
         searchBox = (EditText) findViewById(R.id.search_box);
-        mArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
+        mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView movieList = (ListView) findViewById(R.id.movies_search_listView);
         movieList.setAdapter(mArrayAdapter);
         idArray =new ArrayList<>();
@@ -65,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                 ArrayList<String> extraData=new ArrayList<>();
                 extraData.add(mArrayAdapter.getItem(position));
                 extraData.add(idArray.get(position));
-                launchDetail.putStringArrayListExtra("extra", (ArrayList<String>) extraData);
+                launchDetail.putStringArrayListExtra("extra", extraData);
                 startActivity(launchDetail);
             }
         });

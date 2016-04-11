@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Recent DVDs"
+        android:text="@string/recent_dvds"
         android:id="@+id/recent_dvds_button"
         />
 
@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Recent Movies"
+        android:text="@string/recent_movies"
         android:id="@+id/recent_movies_button"
          />
 
@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Search for Movies"
+        android:text="@string/search_for_movies"
         android:id="@+id/search_movies_button"
         />
 
@@ -38,14 +38,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Recommendations"
+        android:text="@string/recommendations"
         android:id="@+id/recommendations_button"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:text="@string/name"
 
         android:id="@+id/profile_name" />
 
@@ -55,12 +55,12 @@
         android:singleLine="true"
         android:lines="1"
         android:id="@+id/change_name_field"
-        android:hint="New name" />
+        android:hint="@string/new_name" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Major"
+        android:text="@string/major"
 
         android:id="@+id/profile_major" />
 
@@ -72,20 +72,20 @@
         android:singleLine="true"
         android:lines="1"
         android:id="@+id/change_major_field"
-        android:hint="New major" />
+        android:hint="@string/new_major" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Name"
+        android:text="@string/set_name"
         android:id="@+id/set_name_button" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set Major"
+        android:text="@string/set_major"
         android:id="@+id/set_major_button" />
 
 </LinearLayout>

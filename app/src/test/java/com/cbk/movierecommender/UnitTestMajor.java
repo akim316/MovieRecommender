@@ -23,4 +23,5 @@ public class UnitTestMajor {
         assertEquals("CS", db.getStudentMajorFor("Andy"));
         assertNull(db.getStudentMajorFor("ASDF"));
     }
+
 }

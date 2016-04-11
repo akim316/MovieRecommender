@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
         android:layout_marginTop="20dp" />
 
     <EditText
@@ -24,7 +23,7 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/username_field"
-        android:hint="Email" />
+        android:hint="@string/email" />
 
     <EditText
         android:layout_width="match_parent"
@@ -32,7 +31,7 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/password_field"
-        android:hint="Password" />
+        android:hint="@string/password" />
 
     <Button
         android:id="@+id/register"

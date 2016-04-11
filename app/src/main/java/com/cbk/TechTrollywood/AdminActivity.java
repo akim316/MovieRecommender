@@ -196,7 +196,7 @@ public class AdminActivity extends AppCompatActivity {
      */
     private static class UserArrayAdapter extends ArrayAdapter<User> {
 
-        private LayoutInflater inflater;
+        private final LayoutInflater inflater;
 
         /**
          * custom adapter constructor

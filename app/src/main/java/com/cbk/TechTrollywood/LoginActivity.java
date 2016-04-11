@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -54,6 +55,7 @@ import java.util.Map;
  * Email/Password is provided using {@link com.firebase.client.Firebase}
  * Anonymous is provided using {@link com.firebase.client.Firebase}
  */
+@SuppressWarnings("deprecated")
 public class LoginActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -283,7 +285,7 @@ public class LoginActivity extends ActionBarActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Map<String, String> options = new HashMap<String, String>();
+        Map<String, String> options = new HashMap<>();
         if (requestCode == RC_GOOGLE_LOGIN) {
             /* This was a request by the Google API */
             if (resultCode != RESULT_OK) {
@@ -351,7 +353,7 @@ public class LoginActivity extends ActionBarActivity implements
      * This method will attempt to authenticate a user to firebase given an oauth_token (and other
      * necessary parameters depending on the provider)
      */
-    private void authWithFirebase(final String provider, Map<String, String> options) {
+    private void authWithFirebase(String provider, Map<String, String> options) {
         if (options.containsKey("error")) {
             showErrorDialog(options.get("error"));
         } else {
@@ -554,7 +556,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         if (!mGoogleIntentInProgress) {
             /* Store the ConnectionResult so that we can use it later when the user clicks on the Google+ login button */
             mGoogleConnectionResult = result;

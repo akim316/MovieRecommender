@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthException;
@@ -87,6 +88,7 @@ public class GoogleOAuthActivity extends Activity implements
             private String errorMessage = null;
 
             @Override
+            @SuppressWarnings("deprecated")
             protected String doInBackground(Void... params) {
                 String token = null;
 
@@ -139,7 +141,7 @@ public class GoogleOAuthActivity extends Activity implements
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         if (!mGoogleIntentInProgress) {
             /* Store the ConnectionResult so that we can use it later when the user clicks on the Google+ login button */
             mGoogleConnectionResult = result;

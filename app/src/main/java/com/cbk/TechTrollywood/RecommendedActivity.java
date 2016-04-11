@@ -32,7 +32,7 @@ public class RecommendedActivity extends AppCompatActivity {
     //private Button searchButton;
     private RatingBar ratingbar;
     private Boolean movieAdded;
-    private ArrayAdapter mArrayAdapter;
+    private ArrayAdapter<String> mArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
