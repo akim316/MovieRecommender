@@ -1,8 +1,13 @@
 package com.cbk.TechTrollywood;
 
+<<<<<<< Updated upstream
 
 
+=======
+import java.util.HashMap;
+>>>>>>> Stashed changes
 import java.util.List;
+import java.util.Map;
 
 public abstract class Database {
     List recommendationsList = null;
@@ -16,6 +21,7 @@ public abstract class Database {
         return recommendationsList;
     }
 
+<<<<<<< Updated upstream
     public List setRating(int rating, String id) {
         return ratingsList;
     }
@@ -23,4 +29,7 @@ public abstract class Database {
     public boolean search(String movie) {
         return moviesList.contains(movie);
     }
+=======
+    public abstract int getRating(String id);
+>>>>>>> Stashed changes
 }
