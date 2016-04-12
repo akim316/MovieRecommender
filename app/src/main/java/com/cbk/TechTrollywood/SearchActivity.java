@@ -23,15 +23,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity {
     private EditText searchBox;
     private AsyncHttpClient client;
-    private Button searchButton;
+    //private Button searchButton;
     private ArrayAdapter<String> mArrayAdapter;
-    private ArrayList<String> idArray;
+    private List<String> idArray;
     /* A dialog that is presented until the Firebase authentication finished. */
 
     private ProgressDialog mAuthProgressDialog;
@@ -43,9 +44,9 @@ public class SearchActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         client = new AsyncHttpClient();
-        searchButton = (Button) findViewById(R.id.search_button);
+        Button searchButton = (Button) findViewById(R.id.search_button);
         searchBox = (EditText) findViewById(R.id.search_box);
-        mArrayAdapter = new ArrayAdapter<String>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
+        mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview,new ArrayList<String>());
         ListView movieList = (ListView) findViewById(R.id.movies_search_listView);
         movieList.setAdapter(mArrayAdapter);
         idArray =new ArrayList<>();
@@ -64,7 +65,7 @@ public class SearchActivity extends AppCompatActivity {
                 ArrayList<String> extraData=new ArrayList<>();
                 extraData.add(mArrayAdapter.getItem(position));
                 extraData.add(idArray.get(position));
-                launchDetail.putStringArrayListExtra("extra", (ArrayList<String>) extraData);
+                launchDetail.putStringArrayListExtra("extra", extraData);
                 startActivity(launchDetail);
             }
         });
@@ -80,11 +81,12 @@ public class SearchActivity extends AppCompatActivity {
         mAuthProgressDialog.show();
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/movies.json")
-                .appendQueryParameter("apikey", getString(R.string.key)).appendQueryParameter("q", searchBox.getText().toString())
+                .appendQueryParameter("apikey", getString(R.string.key))
+                .appendQueryParameter("q", searchBox.getText().toString())
                 .appendQueryParameter("page_limit", "20");
         String url = uri.build().toString();
         //Log.d("TAG", url);
-        client.get(url.toString(), null, new JsonHttpResponseHandler() {
+        client.get(url, null, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 try {
@@ -101,7 +103,6 @@ public class SearchActivity extends AppCompatActivity {
                     }
                     mAuthProgressDialog.hide();
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     Log.d("TAG", e.toString());
                 }
 

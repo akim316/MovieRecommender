@@ -18,20 +18,21 @@ import com.firebase.client.ValueEventListener;
 
 import java.util.ArrayList;
 
+/**
+ * activity for searching for recommended movies
+ */
 public class RecommendedActivity extends AppCompatActivity {
     private Firebase fb;
     private String movieName;
-    private String movieID;
     private String userID;
     private int rating;
     private String major;
-    private String searchMajor;
-    private AuthData authData;
+    //private AuthData authData;
     private EditText majorfield;
-    private Button searchButton;
+    //private Button searchButton;
     private RatingBar ratingbar;
     private Boolean movieAdded;
-    private ArrayAdapter mArrayAdapter;
+    private ArrayAdapter<String> mArrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class RecommendedActivity extends AppCompatActivity {
         mArrayAdapter = new ArrayAdapter<>(this, R.layout.list_item, R.id.list_item_textview, new ArrayList<String>());
         ListView recentMovies = (ListView) findViewById(R.id.recommended_listView);
         majorfield=(EditText) findViewById(R.id.search_major_edittext);
-        searchButton=(Button) findViewById(R.id.recommendation_search_button);
+        Button searchButton=(Button) findViewById(R.id.recommendation_search_button);
         ratingbar=(RatingBar) findViewById(R.id.search_ratingbar);
 
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -58,19 +59,25 @@ public class RecommendedActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * searches for recommended movies based on movie and rating
+     * @param searchMajorP major to search for
+     * @param searchRatingP rating to search for
+     */
     public void getRecommendations(String searchMajorP,int searchRatingP) {
         final String searchMajor=searchMajorP;
         final int searchRating=searchRatingP;
         mArrayAdapter.clear();
-        authData = fb.getAuth();
+        AuthData authData = fb.getAuth();
         if (authData != null) {
             fb.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     for (DataSnapshot movies : snapshot.child("movies").getChildren()) {
+                        //private String movieID;
                         movieAdded = false;
                         movieName = movies.child("name").getValue().toString();
-                        movieID = movies.getValue().toString();
+                        //movieID = movies.getValue().toString();
                         //Log.d("TAG",movieName);
                         for (DataSnapshot ratings : movies.child("ratings").getChildren()) {
                             userID = ratings.getKey();
@@ -80,7 +87,8 @@ public class RecommendedActivity extends AppCompatActivity {
                             Object m=snapshot.child("users").child(userID).child("Major").getValue();
                             if(m!=null) {
                                 major = m.toString();
-                                if (rating >= searchRating && major.equalsIgnoreCase(searchMajor) && !movieAdded) {
+                                if (rating >= searchRating && major.equalsIgnoreCase(searchMajor)
+                                        && !movieAdded) {
                                     //Log.d("TAG",movieName);
                                     movieAdded = true;
                                     mArrayAdapter.add(movieName);

@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.firebase.client.Firebase;
 
+/**
+ * activity for showing the user profile and main screen
+ */
 public class ProfileActivity extends AppCompatActivity {
     private Firebase mFirebaseRef;
 

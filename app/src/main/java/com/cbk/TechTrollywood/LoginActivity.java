@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -54,6 +55,7 @@ import java.util.Map;
  * Email/Password is provided using {@link com.firebase.client.Firebase}
  * Anonymous is provided using {@link com.firebase.client.Firebase}
  */
+@SuppressWarnings("deprecated")
 public class LoginActivity extends ActionBarActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -128,7 +130,6 @@ public class LoginActivity extends ActionBarActivity implements
     private Button cancelButton;
     private EditText user;
     private EditText password;
-    private boolean locked;
 
     private Context context;
     /* *************************************
@@ -284,7 +285,7 @@ public class LoginActivity extends ActionBarActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Map<String, String> options = new HashMap<String, String>();
+        Map<String, String> options = new HashMap<>();
         if (requestCode == RC_GOOGLE_LOGIN) {
             /* This was a request by the Google API */
             if (resultCode != RESULT_OK) {
@@ -338,12 +339,10 @@ public class LoginActivity extends ActionBarActivity implements
             if (this.mAuthData.getProvider().equals("facebook")) {
                 /* Logout from Facebook */
                 LoginManager.getInstance().logOut();
-            } else if (this.mAuthData.getProvider().equals("google")) {
+            } else if (this.mAuthData.getProvider().equals("google") && mGoogleApiClient.isConnected()) {
                 /* Logout from Google+ */
-                if (mGoogleApiClient.isConnected()) {
-                    Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-                    mGoogleApiClient.disconnect();
-                }
+                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
+                mGoogleApiClient.disconnect();
             }
             /* Update authenticated user and show login buttons */
             setAuthenticatedUser(null);
@@ -354,7 +353,7 @@ public class LoginActivity extends ActionBarActivity implements
      * This method will attempt to authenticate a user to firebase given an oauth_token (and other
      * necessary parameters depending on the provider)
      */
-    private void authWithFirebase(final String provider, Map<String, String> options) {
+    private void authWithFirebase(String provider, Map<String, String> options) {
         if (options.containsKey("error")) {
             showErrorDialog(options.get("error"));
         } else {
@@ -385,7 +384,7 @@ public class LoginActivity extends ActionBarActivity implements
                     Boolean isAdmin = (Boolean) snapshot.child("users").child(fauthData.getUid()).child("admin").getValue();
                     Intent intent;
                     if (isAdmin != null) {
-                        intent = new Intent(context, adminActivity.class);
+                        intent = new Intent(context, AdminActivity.class);
                     } else {
                         intent = new Intent(context, ProfileActivity.class);
                     }
@@ -496,11 +495,14 @@ public class LoginActivity extends ActionBarActivity implements
         }
     }
 
+    /**
+     * not yet implemented
+     */
     private void getGoogleOAuthTokenAndLogin() {
         mAuthProgressDialog.show();
         /* Get OAuth token in Background */
         AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-            String errorMessage = null;
+            private String errorMessage = null;
 
             @Override
             protected String doInBackground(Void... params) {
@@ -508,7 +510,8 @@ public class LoginActivity extends ActionBarActivity implements
 
                 try {
                     String scope = String.format("oauth2:%s", Scopes.PLUS_LOGIN);
-                    token = GoogleAuthUtil.getToken(LoginActivity.this, Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
+                    token = GoogleAuthUtil.getToken(LoginActivity.this,
+                            Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
                 } catch (IOException transientEx) {
                     /* Network or server error */
                     Log.e(TAG, "Error authenticating with Google: " + transientEx);
@@ -553,7 +556,7 @@ public class LoginActivity extends ActionBarActivity implements
 
 
     @Override
-    public void onConnectionFailed(ConnectionResult result) {
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
         if (!mGoogleIntentInProgress) {
             /* Store the ConnectionResult so that we can use it later when the user clicks on the Google+ login button */
             mGoogleConnectionResult = result;
@@ -577,9 +580,9 @@ public class LoginActivity extends ActionBarActivity implements
      *               TWITTER              *
      **************************************
      */
-    private void loginWithTwitter() {
-        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
-    }
+//    private void loginWithTwitter() {
+//        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
+//    }
 
     /* ************************************
      *              PASSWORD              *
@@ -592,36 +595,37 @@ public class LoginActivity extends ActionBarActivity implements
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
         final String email = user.getText().toString();
-        mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(), new AuthResultHandler("password") {
-            @Override
-            public void onAuthenticated(AuthData authData) {
-                String userid = authData.getUid();
-                mFirebaseRef.child("users").child(userid).child("email").setValue(email.trim());
-                retries = 0;
-                mAuthProgressDialog.dismiss();
-            }
+        mFirebaseRef.authWithPassword(user.getText().toString(), password.getText().toString(),
+                new AuthResultHandler("password") {
+                    @Override
+                    public void onAuthenticated(AuthData authData) {
+                        String userid = authData.getUid();
+                        mFirebaseRef.child("users").child(userid).child("email").setValue(email.trim());
+                        retries = 0;
+                        mAuthProgressDialog.dismiss();
+                    }
 
-            @Override
-            public void onAuthenticationError(FirebaseError error) {
-                switch (error.getCode()) {
-                    case FirebaseError.INVALID_PASSWORD:
-                        retries++;
-                        if (retries > MAX_RETRIES) {
-                            lockAccount(email);
-                            retries = 0;
-                        } else {
-                            Toast.makeText(getApplicationContext(), error.getMessage(),
-                                    Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onAuthenticationError(FirebaseError error) {
+                        switch (error.getCode()) {
+                            case FirebaseError.INVALID_PASSWORD:
+                                retries++;
+                                if (retries > MAX_RETRIES) {
+                                    lockAccount(email);
+                                    retries = 0;
+                                } else {
+                                    Toast.makeText(getApplicationContext(), error.getMessage(),
+                                            Toast.LENGTH_LONG).show();
+                                }
+                                break;
+                            default:
+                                Toast.makeText(getApplicationContext(), error.getMessage(),
+                                        Toast.LENGTH_LONG).show();
+                                break;
                         }
-                        break;
-                    default:
-                        Toast.makeText(getApplicationContext(), error.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                        break;
-                }
-                mAuthProgressDialog.dismiss();
-            }
-        });
+                        mAuthProgressDialog.dismiss();
+                    }
+                });
         showLogin();
     }
 
@@ -630,6 +634,9 @@ public class LoginActivity extends ActionBarActivity implements
      **************************************
      */
 
+    /**
+     * shows login buttons
+     */
     private void showLogin() {
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -648,6 +655,9 @@ public class LoginActivity extends ActionBarActivity implements
         cancelButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * cancel login
+     */
     private void cancel() {
         mFacebookLoginButton.setVisibility(View.VISIBLE);
         mGoogleLoginButton.setVisibility(View.VISIBLE);
@@ -665,6 +675,9 @@ public class LoginActivity extends ActionBarActivity implements
         });
     }
 
+    /**
+     * method for registering users
+     */
     public void register() {
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Registering new account with Firebase...");
@@ -703,6 +716,10 @@ public class LoginActivity extends ActionBarActivity implements
         mFirebaseRef.authAnonymously(new AuthResultHandler("anonymous"));
     }
 
+    /**
+     * locks the account given an email of the user
+     * @param emailP email of the account to lock
+     */
     private void lockAccount(String emailP) {
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Locking your account...");
@@ -715,8 +732,9 @@ public class LoginActivity extends ActionBarActivity implements
                 for (DataSnapshot user : snapshot.child("users").getChildren()) {
                     String userid = user.getKey();
                     String userEmail = user.child("email").getValue().toString();
-                    if (userEmail.equalsIgnoreCase(email.trim()))
+                    if (userEmail.equalsIgnoreCase(email.trim())) {
                         mFirebaseRef.child("users").child(userid).child("locked").setValue(true);
+                    }
                 }
                 mAuthProgressDialog.dismiss();
 
@@ -731,6 +749,9 @@ public class LoginActivity extends ActionBarActivity implements
 
     }
 
+    /**
+     * method for checking if an account is locked and logging the user in if not
+     */
     private void checkedLocked() {
         mAuthProgressDialog.setTitle("Please wait");
         mAuthProgressDialog.setMessage("Authenticating with Firebase...");
@@ -745,7 +766,8 @@ public class LoginActivity extends ActionBarActivity implements
                     if (user.child("email").getValue() != null) {
                         String userEmail = user.child("email").getValue().toString();
                         if (userEmail.equalsIgnoreCase(email)) {
-                            if (user.child("locked").getValue() == null || user.child("locked").getValue() == false) {
+                            if (user.child("locked").getValue() == null ||
+                                    !((boolean) user.child("locked").getValue())) {
                                 loginWithPassword();
                                 loggedIn = true;
                             } else {
@@ -756,7 +778,7 @@ public class LoginActivity extends ActionBarActivity implements
                     }
 
                 }
-                if (loggedIn == false) {
+                if (!loggedIn) {
                     Toast.makeText(getApplicationContext(), "Email not found or incorrect",
                             Toast.LENGTH_LONG).show();
                 }

@@ -74,7 +74,8 @@ public class TwitterOAuthActivity extends Activity {
                     @Override
                     public void onPageFinished(final WebView view, final String url) {
                         if (url.startsWith("oauth://cb")) {
-                            getTwitterOAuthTokenAndLogin(token, Uri.parse(url).getQueryParameter("oauth_verifier"));
+                            getTwitterOAuthTokenAndLogin(token,
+                                    Uri.parse(url).getQueryParameter("oauth_verifier"));
                         }
                     }
                 });
@@ -83,7 +84,8 @@ public class TwitterOAuthActivity extends Activity {
         }.execute();
     }
 
-    private void getTwitterOAuthTokenAndLogin(final RequestToken requestToken, final String oauthVerifier) {
+    private void getTwitterOAuthTokenAndLogin(final RequestToken requestToken,
+                                              final String oauthVerifier) {
         // once a user authorizes the application, get the auth token and return to the LoginActivity
         new AsyncTask<Void, Void, AccessToken>() {
             @Override

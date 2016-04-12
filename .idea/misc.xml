@@ -16,11 +16,7 @@
     <option name="snInfluenceFormat" value="0" />
     <option name="snCheckCPP" value="true" />
     <option name="snCheckC" value="true" />
-<<<<<<< HEAD
     <option name="pathToUserRulesConfiguration" value="" />
-=======
-    <option name="pathToUserRulesConfiguration" value="C:\Users\alex9\AndroidStudioProjects\MovieRecommender\app\profileCodingRules.xml" />
->>>>>>> origin/master
     <option name="pathToJarWithRules" value="" />
   </component>
   <component name="EntryPointsManager">

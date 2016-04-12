@@ -18,6 +18,9 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * activity that shows recent movies
+ */
 public class RecentActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private ArrayAdapter<String> mArrayAdapter;
@@ -33,13 +36,17 @@ public class RecentActivity extends AppCompatActivity {
         getRecent();
 
     }
+
+    /**
+     * populates recent movies list from rotten tomatoes
+     */
     private void getRecent(){
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/lists/movies/opening.json")
                 .appendQueryParameter("apikey", getString(R.string.key));
         String url = uri.build().toString();
         Log.d("TAG", url);
-        client.get(url.toString(), null, new JsonHttpResponseHandler() {
+        client.get(url, null, new JsonHttpResponseHandler() {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 // If the response is JSONObject instead of expected JSONArray
                 try {
@@ -51,7 +58,6 @@ public class RecentActivity extends AppCompatActivity {
                         mArrayAdapter.add(title);
                     }
                 } catch (JSONException e) {
-                    e.printStackTrace();
                     Log.d("TAG", e.toString());
                 }
 
