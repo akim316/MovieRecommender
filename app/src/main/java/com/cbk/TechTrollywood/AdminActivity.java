@@ -57,6 +57,37 @@ public class AdminActivity extends AppCompatActivity {
     }
 
     /**
+     * populates the user list from firebase
+     */
+    private void populateUserList() {
+        fb.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot user : snapshot.child("users").getChildren()) {
+                    String uid = user.getKey();
+                    String email = user.child("email").getValue().toString();
+                    Boolean locked = (Boolean) user.child("locked").getValue();
+                    if(locked==null){
+                        locked=Boolean.FALSE;
+                    }
+                    listAdapter.add(new User(email, uid, locked));
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                Log.d("TAG", firebaseError.getMessage());
+            }
+        });
+    }
+
+    public void onBackPressed()
+    {
+        fb.unauth();
+        this.finish();
+    }
+
+    /**
      * Holds User data.
      */
     private static class User {
@@ -259,36 +290,5 @@ public class AdminActivity extends AppCompatActivity {
             return convertView;
         }
 
-    }
-
-    /**
-     * populates the user list from firebase
-     */
-    private void populateUserList() {
-        fb.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                for (DataSnapshot user : snapshot.child("users").getChildren()) {
-                    String uid = user.getKey();
-                    String email = user.child("email").getValue().toString();
-                    Boolean locked = (Boolean) user.child("locked").getValue();
-                    if(locked==null){
-                        locked=Boolean.FALSE;
-                    }
-                    listAdapter.add(new User(email, uid, locked));
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                Log.d("TAG", firebaseError.getMessage());
-            }
-        });
-    }
-
-    public void onBackPressed()
-    {
-        fb.unauth();
-        this.finish();
     }
 }

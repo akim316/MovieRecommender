@@ -48,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    static boolean active = false;
+    private static boolean active = false;
 
     @Override
     public void onStart() {

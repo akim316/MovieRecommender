@@ -29,8 +29,8 @@ public class UnitTestSearch {
 
         when(db.search("Home Alone")).thenReturn(list.contains("Home Alone"));
 
-        assertTrue("Home Alone", true);
-        assertFalse("Cheaper by the Dozen", false);
+        assertTrue(db.search("Home Alone"));
+        assertFalse(db.search("Cheaper by the Dozen"));
     }
 
 }

@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by Amy on 4/6/2016.
  */
-public class testGetRating {
+public class UnitTestGetRating {
     @Test
 
     public void getRatingTest() {

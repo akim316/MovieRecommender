@@ -1,5 +1,7 @@
 package com.cbk.movierecommender;
 
+import android.widget.ArrayAdapter;
+
 import com.cbk.TechTrollywood.Database;
 
 import org.junit.Test;

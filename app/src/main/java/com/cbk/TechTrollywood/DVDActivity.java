@@ -36,7 +36,11 @@ public class DVDActivity extends AppCompatActivity {
         getRecent();
 
     }
-    private void getRecent(){
+
+    /**
+     *
+     */
+    private void getRecent() {
         Uri.Builder uri = new Uri.Builder();
         uri.scheme("http").authority("api.rottentomatoes.com").path("api/public/v1.0/lists/dvds/new_releases.json")
                 .appendQueryParameter("apikey", getString(R.string.key));
