@@ -9,6 +9,7 @@ public abstract class Database {
     List moviesList =  null;
 
     public abstract String getStudentMajorFor(String major);
+    public abstract Boolean setStudentMajor(String name, String major);
 
     public List getRecommendations(String searchMajor, String searchRating) {
         return recommendationsList;
