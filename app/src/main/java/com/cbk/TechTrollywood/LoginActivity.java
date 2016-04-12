@@ -332,11 +332,12 @@ public class LoginActivity extends ActionBarActivity implements
      */
     private void logout() {
         if (this.mAuthData != null) {
+            String facebook = "facebook";
             /* logout of Firebase */
             mFirebaseRef.unauth();
             /* Logout of any of the Frameworks. This step is optional, but ensures the user is not logged into
              * Facebook/Google+ after logging out of Firebase. */
-            if (this.mAuthData.getProvider().equals("facebook")) {
+            if (this.mAuthData.getProvider().equals(facebook)) {
                 /* Logout from Facebook */
                 LoginManager.getInstance().logOut();
             } else if (this.mAuthData.getProvider().equals("google") && mGoogleApiClient.isConnected()) {
@@ -373,15 +374,20 @@ public class LoginActivity extends ActionBarActivity implements
      */
     private void setAuthenticatedUser(AuthData authData) {
         if (authData != null) {
-            mAuthProgressDialog.setTitle("Loading");
-            mAuthProgressDialog.setMessage("Authenticating with Firebase...");
+            String firebase = "Authenticating with Firebase...";
+            String loading = "Loading";
+
+            mAuthProgressDialog.setTitle(loading);
+            mAuthProgressDialog.setMessage(firebase);
             mAuthProgressDialog.setCancelable(false);
             mAuthProgressDialog.show();
             final AuthData fauthData = authData;
             mFirebaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    Boolean isAdmin = (Boolean) snapshot.child("users").child(fauthData.getUid()).child("admin").getValue();
+                    String users = "users";
+                    String admin = "admin";
+                    Boolean isAdmin = (Boolean) snapshot.child(users).child(fauthData.getUid()).child(admin).getValue();
                     Intent intent;
                     if (isAdmin != null) {
                         intent = new Intent(context, AdminActivity.class);
@@ -432,31 +438,6 @@ public class LoginActivity extends ActionBarActivity implements
                 .setPositiveButton(android.R.string.ok, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-    }
-
-    /**
-     * Utility class for authentication results
-     */
-    private class AuthResultHandler implements Firebase.AuthResultHandler {
-
-        private final String provider;
-
-        public AuthResultHandler(String provider) {
-            this.provider = provider;
-        }
-
-        @Override
-        public void onAuthenticated(AuthData authData) {
-            mAuthProgressDialog.dismiss();
-            Log.i(TAG, provider + " auth successful");
-            setAuthenticatedUser(authData);
-        }
-
-        @Override
-        public void onAuthenticationError(FirebaseError firebaseError) {
-            mAuthProgressDialog.dismiss();
-            showErrorDialog(firebaseError.toString());
-        }
     }
 
     /* ************************************
@@ -599,8 +580,10 @@ public class LoginActivity extends ActionBarActivity implements
                 new AuthResultHandler("password") {
                     @Override
                     public void onAuthenticated(AuthData authData) {
+                        String users = "users";
+                        String email = "email";
                         String userid = authData.getUid();
-                        mFirebaseRef.child("users").child(userid).child("email").setValue(email.trim());
+                        mFirebaseRef.child(users).child(userid).child(email).setValue(email.trim());
                         retries = 0;
                         mAuthProgressDialog.dismiss();
                     }
@@ -679,7 +662,8 @@ public class LoginActivity extends ActionBarActivity implements
      * method for registering users
      */
     public void register() {
-        mAuthProgressDialog.setTitle("Please wait");
+        String pleaseWait = "Please wait";
+        mAuthProgressDialog.setTitle(pleaseWait);
         mAuthProgressDialog.setMessage("Registering new account with Firebase...");
         mAuthProgressDialog.setCancelable(false);
         mAuthProgressDialog.show();
@@ -792,5 +776,30 @@ public class LoginActivity extends ActionBarActivity implements
             }
         });
 
+    }
+
+    /**
+     * Utility class for authentication results
+     */
+    private class AuthResultHandler implements Firebase.AuthResultHandler {
+
+        private final String provider;
+
+        public AuthResultHandler(String provider) {
+            this.provider = provider;
+        }
+
+        @Override
+        public void onAuthenticated(AuthData authData) {
+            mAuthProgressDialog.dismiss();
+            Log.i(TAG, provider + " auth successful");
+            setAuthenticatedUser(authData);
+        }
+
+        @Override
+        public void onAuthenticationError(FirebaseError firebaseError) {
+            mAuthProgressDialog.dismiss();
+            showErrorDialog(firebaseError.toString());
+        }
     }
 }

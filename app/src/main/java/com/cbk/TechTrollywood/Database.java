@@ -23,4 +23,6 @@ public abstract class Database {
     public boolean search(String movie) {
         return moviesList.contains(movie);
     }
+    
+    public abstract int getRating(String id);
 }
