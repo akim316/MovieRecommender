@@ -99,7 +99,7 @@ public class LoginActivity extends ActionBarActivity implements
     public static final int RC_GOOGLE_LOGIN = 1;
 
     /* Client used to interact with Google APIs. */
-    private GoogleApiClient mGoogleApiClient;
+
 
     /* A flag indicating that a PendingIntent is in progress and prevents us from starting further intents. */
     private boolean mGoogleIntentInProgress;
@@ -171,21 +171,21 @@ public class LoginActivity extends ActionBarActivity implements
             @Override
             public void onClick(View view) {
                 mGoogleLoginClicked = true;
-                if (!mGoogleApiClient.isConnecting()) {
+                if (!TtApplication.mGoogleApiClient.isConnecting()) {
                     if (mGoogleConnectionResult != null) {
                         resolveSignInError();
-                    } else if (mGoogleApiClient.isConnected()) {
+                    } else if (TtApplication.mGoogleApiClient.isConnected()) {
                         getGoogleOAuthTokenAndLogin();
                     } else {
                     /* connect API now */
                         Log.d(TAG, "Trying to connect to Google API");
-                        mGoogleApiClient.connect();
+                        TtApplication.mGoogleApiClient.connect();
                     }
                 }
             }
         });
         /* Setup the Google API object to allow Google+ logins */
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        TtApplication.mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(Plus.API)
@@ -315,8 +315,8 @@ public class LoginActivity extends ActionBarActivity implements
                 mGoogleLoginClicked = false;
             }
             mGoogleIntentInProgress = false;
-            if (!mGoogleApiClient.isConnecting()) {
-                mGoogleApiClient.connect();
+            if (!TtApplication.mGoogleApiClient.isConnecting()) {
+                TtApplication.mGoogleApiClient.connect();
             }
         } else if (requestCode == RC_TWITTER_LOGIN) {
             options.put("oauth_token", data.getStringExtra("oauth_token"));
@@ -363,10 +363,10 @@ public class LoginActivity extends ActionBarActivity implements
             if (this.mAuthData.getProvider().equals(facebook)) {
                 /* Logout from Facebook */
                 LoginManager.getInstance().logOut();
-            } else if (this.mAuthData.getProvider().equals("google") && mGoogleApiClient.isConnected()) {
+            } else if (this.mAuthData.getProvider().equals("google") && TtApplication.mGoogleApiClient.isConnected()) {
                 /* Logout from Google+ */
-                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-                mGoogleApiClient.disconnect();
+                Plus.AccountApi.clearDefaultAccount(TtApplication.mGoogleApiClient);
+                TtApplication.mGoogleApiClient.disconnect();
             }
             /* Update authenticated user and show login buttons */
             setAuthenticatedUser(null);
@@ -497,13 +497,13 @@ public class LoginActivity extends ActionBarActivity implements
                 // The intent was canceled before it was sent.  Return to the default
                 // state and attempt to connect to get an updated ConnectionResult.
                 mGoogleIntentInProgress = false;
-                mGoogleApiClient.connect();
+                TtApplication.mGoogleApiClient.connect();
             }
         }
     }
 
     /**
-     * not yet implemented
+     * login using google oauth
      */
     private void getGoogleOAuthTokenAndLogin() {
         mAuthProgressDialog.show();
@@ -518,7 +518,7 @@ public class LoginActivity extends ActionBarActivity implements
                 try {
                     String scope = String.format("oauth2:%s", Scopes.PLUS_LOGIN);
                     token = GoogleAuthUtil.getToken(LoginActivity.this,
-                            Plus.AccountApi.getAccountName(mGoogleApiClient), scope);
+                            Plus.AccountApi.getAccountName(TtApplication.mGoogleApiClient), scope);
                 } catch (IOException transientEx) {
                     /* Network or server error */
                     Log.e(TAG, "Error authenticating with Google: " + transientEx);

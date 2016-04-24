@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.facebook.login.LoginManager;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
+import com.google.android.gms.plus.Plus;
 
 /**
  * activity for showing the user profile and main screen
@@ -46,10 +47,10 @@ public class ProfileActivity extends AppCompatActivity {
             if (this.mAuthData.getProvider().equals(facebook)) {
                 /* Logout from Facebook */
                 LoginManager.getInstance().logOut();
-//            } else if (this.mAuthData.getProvider().equals("google") && mGoogleApiClient.isConnected()) {
-//                /* Logout from Google+ */
-//                Plus.AccountApi.clearDefaultAccount(mGoogleApiClient);
-//                mGoogleApiClient.disconnect();
+            } else if (this.mAuthData.getProvider().equals("google") && TtApplication.mGoogleApiClient.isConnected()) {
+                /* Logout from Google+ */
+                Plus.AccountApi.clearDefaultAccount(TtApplication.mGoogleApiClient);
+                TtApplication.mGoogleApiClient.disconnect();
             }
 
         }
