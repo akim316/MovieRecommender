@@ -128,8 +128,11 @@ public class LoginActivity extends ActionBarActivity implements
     private Button mPasswordLoginButton;
     private Button registerButton;
     private Button cancelButton;
+    private Button forgotPasswordButton;
+
     private EditText user;
     private EditText password;
+
 
     private Context context;
     /* *************************************
@@ -196,7 +199,7 @@ public class LoginActivity extends ActionBarActivity implements
         mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //loginWithTwitter();
+                loginWithTwitter();
             }
         });
 
@@ -208,6 +211,26 @@ public class LoginActivity extends ActionBarActivity implements
             @Override
             public void onClick(View view) {
                 showLogin();
+            }
+        });
+
+        forgotPasswordButton = (Button) findViewById(R.id.forgot_password_button);
+        forgotPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFirebaseRef.resetPassword(user.getText().toString(), new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext(), "Reset password email sent.",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        Toast.makeText(getApplicationContext(), firebaseError.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
@@ -412,10 +435,13 @@ public class LoginActivity extends ActionBarActivity implements
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.VISIBLE);
-            mLoggedInStatusTextView.setVisibility(View.GONE);
-            cancelButton.setVisibility(View.GONE);
             user.setVisibility(View.VISIBLE);
             password.setVisibility(View.VISIBLE);
+
+            mLoggedInStatusTextView.setVisibility(View.GONE);
+            forgotPasswordButton.setVisibility(View.GONE);
+            cancelButton.setVisibility(View.GONE);
+
             mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -561,9 +587,9 @@ public class LoginActivity extends ActionBarActivity implements
      *               TWITTER              *
      **************************************
      */
-//    private void loginWithTwitter() {
-//        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
-//    }
+    private void loginWithTwitter() {
+        startActivityForResult(new Intent(this, TwitterOAuthActivity.class), RC_TWITTER_LOGIN);
+    }
 
     /* ************************************
      *              PASSWORD              *
@@ -631,11 +657,15 @@ public class LoginActivity extends ActionBarActivity implements
         mFacebookLoginButton.setVisibility(View.GONE);
         mGoogleLoginButton.setVisibility(View.GONE);
         mTwitterLoginButton.setVisibility(View.GONE);
+
         mPasswordLoginButton.setVisibility(View.VISIBLE);
+        forgotPasswordButton.setVisibility(View.VISIBLE);
+        cancelButton.setVisibility(View.VISIBLE);
+
         mAnonymousLoginButton.setVisibility(View.GONE);
         registerButton.setVisibility(View.GONE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
-        cancelButton.setVisibility(View.VISIBLE);
+
     }
 
     /**
@@ -648,8 +678,11 @@ public class LoginActivity extends ActionBarActivity implements
         mPasswordLoginButton.setVisibility(View.VISIBLE);
         mAnonymousLoginButton.setVisibility(View.VISIBLE);
         registerButton.setVisibility(View.VISIBLE);
+
+        forgotPasswordButton.setVisibility(View.GONE);
         mLoggedInStatusTextView.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
+
         mPasswordLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

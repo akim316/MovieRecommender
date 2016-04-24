@@ -40,12 +40,6 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/login_with_twitter"
-        android:text="@string/login_with_twitter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
         android:id="@+id/login_with_password"
         android:text="@string/login_with_password"
         android:layout_width="match_parent"
@@ -54,6 +48,12 @@
     <Button
         android:id="@+id/login_anonymously"
         android:text="@string/login_anonymously"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/login_with_twitter"
+        android:text="@string/login_with_twitter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -75,6 +75,13 @@
         android:text="@string/cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password"
+        android:id="@+id/forgot_password_button"
+        android:layout_gravity="center_horizontal" />
 
 
 </LinearLayout>
