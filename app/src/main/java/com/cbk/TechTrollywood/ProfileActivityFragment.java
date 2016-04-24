@@ -79,7 +79,7 @@ public class ProfileActivityFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 profileName.setText(nameField.getText());
-                setName();
+                setName(nameField.getText().toString());
             }
         });
 
@@ -137,6 +137,12 @@ public class ProfileActivityFragment extends Fragment {
                 oldPasswordField.setVisibility(View.GONE);
                 newPasswordField.setVisibility(View.GONE);
                 setPasswordButton.setVisibility(View.GONE);
+                if(provider.equals("facebook")){
+                    String facebookname=authData.getProviderData().get("displayName").toString();
+                    nameField.setVisibility(View.GONE);
+                    setNameButton.setVisibility(View.GONE);
+                    setName(facebookname);
+                }
 
             }
         }
@@ -147,9 +153,9 @@ public class ProfileActivityFragment extends Fragment {
     /**
      * sets the user's name in firebase
      */
-    private void setName(){
+    private void setName(String name){
         if (authData != null) {
-            fb.child("users").child(authData.getUid()).child("Name").setValue(nameField.getText().toString());
+            fb.child("users").child(authData.getUid()).child("Name").setValue(name);
         } else {
             Toast.makeText(getContext(), "No user authenticated",
                     Toast.LENGTH_LONG).show();

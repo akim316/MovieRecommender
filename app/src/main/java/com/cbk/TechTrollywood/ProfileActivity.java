@@ -3,6 +3,10 @@ package com.cbk.TechTrollywood;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
@@ -46,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
              * Facebook/Google+ after logging out of Firebase. */
             if (this.mAuthData.getProvider().equals(facebook)) {
                 /* Logout from Facebook */
-                LoginManager.getInstance().logOut();
+                disconnectFromFacebook();
             } else if (this.mAuthData.getProvider().equals("google") && TtApplication.mGoogleApiClient.isConnected()) {
                 /* Logout from Google+ */
                 Plus.AccountApi.clearDefaultAccount(TtApplication.mGoogleApiClient);
@@ -54,5 +58,22 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
         }
+    }
+
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
     }
 }
