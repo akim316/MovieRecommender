@@ -120,7 +120,7 @@ public class LoginActivity extends ActionBarActivity implements
      ***************************************/
     public static final int RC_TWITTER_LOGIN = 2;
 
-    private Button mTwitterLoginButton;
+    //private Button mTwitterLoginButton;
 
     /* *************************************
      *              PASSWORD               *
@@ -195,13 +195,13 @@ public class LoginActivity extends ActionBarActivity implements
         /* *************************************
          *                TWITTER              *
          ***************************************/
-        mTwitterLoginButton = (Button) findViewById(R.id.login_with_twitter);
-        mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loginWithTwitter();
-            }
-        });
+//        mTwitterLoginButton = (Button) findViewById(R.id.login_with_twitter);
+//        mTwitterLoginButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                loginWithTwitter();
+//            }
+//        });
 
         /* *************************************
          *               PASSWORD              *
@@ -431,7 +431,7 @@ public class LoginActivity extends ActionBarActivity implements
             /* No authenticated user show all the login buttons */
             mFacebookLoginButton.setVisibility(View.VISIBLE);
             mGoogleLoginButton.setVisibility(View.VISIBLE);
-            mTwitterLoginButton.setVisibility(View.VISIBLE);
+            //mTwitterLoginButton.setVisibility(View.VISIBLE);
             mPasswordLoginButton.setVisibility(View.VISIBLE);
             mAnonymousLoginButton.setVisibility(View.VISIBLE);
             registerButton.setVisibility(View.VISIBLE);
@@ -653,7 +653,7 @@ public class LoginActivity extends ActionBarActivity implements
         });
         mFacebookLoginButton.setVisibility(View.GONE);
         mGoogleLoginButton.setVisibility(View.GONE);
-        mTwitterLoginButton.setVisibility(View.GONE);
+        //mTwitterLoginButton.setVisibility(View.GONE);
 
         mPasswordLoginButton.setVisibility(View.VISIBLE);
         forgotPasswordButton.setVisibility(View.VISIBLE);
@@ -671,7 +671,7 @@ public class LoginActivity extends ActionBarActivity implements
     private void cancel() {
         mFacebookLoginButton.setVisibility(View.VISIBLE);
         mGoogleLoginButton.setVisibility(View.VISIBLE);
-        mTwitterLoginButton.setVisibility(View.VISIBLE);
+        //mTwitterLoginButton.setVisibility(View.VISIBLE);
         mPasswordLoginButton.setVisibility(View.VISIBLE);
         mAnonymousLoginButton.setVisibility(View.VISIBLE);
         registerButton.setVisibility(View.VISIBLE);

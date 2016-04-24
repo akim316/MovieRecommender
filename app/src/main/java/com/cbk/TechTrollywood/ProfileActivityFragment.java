@@ -26,12 +26,15 @@ public class ProfileActivityFragment extends Fragment {
     private Firebase fb;
     private TextView profileName;
     private TextView profileMajor;
+    private TextView password;
     private EditText nameField;
     private EditText majorField;
     private EditText newPasswordField;
     private EditText oldPasswordField;
     private String email;
     private Context context;
+    private String uid;
+    private AuthData authData;
 
 
 
@@ -119,10 +122,24 @@ public class ProfileActivityFragment extends Fragment {
         
         profileName=(TextView)view.findViewById(R.id.profile_name);
         profileMajor=(TextView)view.findViewById(R.id.profile_major);
+        password=(TextView)view.findViewById(R.id.password_textview);
         nameField=(EditText)view.findViewById(R.id.change_name_field);
         majorField=(EditText)view.findViewById(R.id.change_major_field);
         oldPasswordField=(EditText)view.findViewById(R.id.old_password_editText);
         newPasswordField=(EditText)view.findViewById(R.id.new_password_editext);
+
+        authData = fb.getAuth();
+        if(authData != null) {
+            String provider = authData.getProvider();
+
+            if(!provider.equals(password)){
+                password.setVisibility(View.GONE);
+                oldPasswordField.setVisibility(View.GONE);
+                newPasswordField.setVisibility(View.GONE);
+                setPasswordButton.setVisibility(View.GONE);
+
+            }
+        }
         populateFields();
         return view;
     }
@@ -131,7 +148,6 @@ public class ProfileActivityFragment extends Fragment {
      * sets the user's name in firebase
      */
     private void setName(){
-        AuthData authData = fb.getAuth();
         if (authData != null) {
             fb.child("users").child(authData.getUid()).child("Name").setValue(nameField.getText().toString());
         } else {
@@ -144,7 +160,6 @@ public class ProfileActivityFragment extends Fragment {
      * sets the user's major in firebase
      */
     private void setMajor(){
-        AuthData authData = fb.getAuth();
         if (authData != null) {
             fb.child("users").child(authData.getUid()).child("Major").setValue(majorField.getText().toString());
         } else {
@@ -156,8 +171,8 @@ public class ProfileActivityFragment extends Fragment {
 
 
     private void populateFields() {
-        AuthData authData = fb.getAuth();
         if (authData != null) {
+            uid=authData.getUid();
             fb.child("users").child(authData.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -167,7 +182,12 @@ public class ProfileActivityFragment extends Fragment {
                     if (snapshot.child("Major").getValue() != null) {
                         profileMajor.setText(snapshot.child("Major").getValue().toString());
                     }
-                    email=snapshot.child("email").getValue().toString();
+                    if(snapshot.child("email").getValue()==null){
+                        fb.child("users").child(uid).child("email").setValue(uid);
+                        email=uid;
+                    }else {
+                        email = snapshot.child("email").getValue().toString();
+                    }
                 }
 
                 @Override

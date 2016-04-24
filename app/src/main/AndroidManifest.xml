@@ -78,6 +78,9 @@
             android:name=".TwitterOAuthActivity"
             android:parentActivityName=".ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity android:name="com.facebook.FacebookActivity" />
+
     </application>
 
 </manifest>
