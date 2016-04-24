@@ -1,5 +1,6 @@
 package com.cbk.TechTrollywood;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -27,6 +28,10 @@ public class ProfileActivityFragment extends Fragment {
     private TextView profileMajor;
     private EditText nameField;
     private EditText majorField;
+    private EditText newPasswordField;
+    private EditText oldPasswordField;
+    private String email;
+    private Context context;
 
 
 
@@ -37,6 +42,7 @@ public class ProfileActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_profile, container, false);
+        context=getContext();
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         Button searchMovies = (Button) view.findViewById(R.id.search_movies_button);
         searchMovies.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +89,25 @@ public class ProfileActivityFragment extends Fragment {
             }
         });
 
+        Button setPasswordButton=(Button)view.findViewById(R.id.set_password_button);
+        setPasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fb.changePassword(email, oldPasswordField.getText().toString(), newPasswordField.getText().toString(), new Firebase.ResultHandler() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(context, "Password Changed",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(FirebaseError firebaseError) {
+                        Toast.makeText(context, firebaseError.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
         Button recommendationsButton=(Button)view.findViewById(R.id.recommendations_button);
         recommendationsButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -96,6 +121,8 @@ public class ProfileActivityFragment extends Fragment {
         profileMajor=(TextView)view.findViewById(R.id.profile_major);
         nameField=(EditText)view.findViewById(R.id.change_name_field);
         majorField=(EditText)view.findViewById(R.id.change_major_field);
+        oldPasswordField=(EditText)view.findViewById(R.id.old_password_editText);
+        newPasswordField=(EditText)view.findViewById(R.id.new_password_editext);
         populateFields();
         return view;
     }
@@ -127,6 +154,7 @@ public class ProfileActivityFragment extends Fragment {
 
     }
 
+
     private void populateFields() {
         AuthData authData = fb.getAuth();
         if (authData != null) {
@@ -139,6 +167,7 @@ public class ProfileActivityFragment extends Fragment {
                     if (snapshot.child("Major").getValue() != null) {
                         profileMajor.setText(snapshot.child("Major").getValue().toString());
                     }
+                    email=snapshot.child("email").getValue().toString();
                 }
 
                 @Override

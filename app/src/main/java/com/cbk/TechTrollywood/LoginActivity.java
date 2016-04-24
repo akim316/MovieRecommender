@@ -221,7 +221,7 @@ public class LoginActivity extends ActionBarActivity implements
                 mFirebaseRef.resetPassword(user.getText().toString(), new Firebase.ResultHandler() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(), "Reset password email sent.",
+                        Toast.makeText(getApplicationContext(), "New Password Sent to Email",
                                 Toast.LENGTH_LONG).show();
                     }
 
@@ -606,16 +606,13 @@ public class LoginActivity extends ActionBarActivity implements
                 new AuthResultHandler("password") {
                     @Override
                     public void onAuthenticated(AuthData authData) {
-                        String users = "users";
-                        String email = "email";
-                        String userid = authData.getUid();
-                        mFirebaseRef.child(users).child(userid).child(email).setValue(email.trim());
                         retries = 0;
                         mAuthProgressDialog.dismiss();
                     }
 
                     @Override
                     public void onAuthenticationError(FirebaseError error) {
+                        Log.d("TAG","login error");
                         switch (error.getCode()) {
                             case FirebaseError.INVALID_PASSWORD:
                                 retries++;

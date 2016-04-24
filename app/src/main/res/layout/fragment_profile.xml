@@ -1,91 +1,121 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:orientation="vertical"
-    tools:context="com.cbk.TechTrollywood.ProfileActivityFragment"
-    tools:showIn="@layout/activity_profile">
+    android:layout_height="match_parent">
 
-    <Button
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/recent_dvds"
-        android:id="@+id/recent_dvds_button"
-        />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.cbk.TechTrollywood.ProfileActivityFragment"
+        tools:showIn="@layout/activity_profile">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/recent_movies"
-        android:id="@+id/recent_movies_button"
-         />
+        <Button
+            android:id="@+id/recent_dvds_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/recent_dvds" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/search_for_movies"
-        android:id="@+id/search_movies_button"
-        />
+        <Button
+            android:id="@+id/recent_movies_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/recent_movies" />
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/recommendations"
-        android:id="@+id/recommendations_button"
-        />
+        <Button
+            android:id="@+id/search_movies_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/search_for_movies" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/name"
+        <Button
+            android:id="@+id/recommendations_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/recommendations" />
 
-        android:id="@+id/profile_name" />
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:lines="1"
-        android:id="@+id/change_name_field"
-        android:hint="@string/new_name" />
+            android:text="@string/name" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/major"
+        <EditText
+            android:id="@+id/change_name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_name"
+            android:lines="1"
+            android:singleLine="true" />
 
-        android:id="@+id/profile_major" />
+        <Button
+            android:id="@+id/set_name_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_name" />
+
+        <TextView
+            android:id="@+id/profile_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/major" />
 
 
+        <EditText
+            android:id="@+id/change_major_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/new_major"
+            android:lines="1"
+            android:singleLine="true" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:lines="1"
-        android:id="@+id/change_major_field"
-        android:hint="@string/new_major" />
+        <Button
+            android:id="@+id/set_major_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/set_major" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_name"
-        android:id="@+id/set_name_button" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/password" />
 
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/set_major"
-        android:id="@+id/set_major_button" />
+        <EditText
+            android:id="@+id/old_password_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ems="10"
+            android:hint="Old Password"
+            android:inputType="textPassword" />
 
-</LinearLayout>
+        <EditText
+            android:id="@+id/new_password_editext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="New Password"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/set_password_button"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="set pasword" />
+
+    </LinearLayout>
+</ScrollView>
