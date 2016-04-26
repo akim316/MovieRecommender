@@ -251,7 +251,7 @@ public class AdminActivity extends AppCompatActivity {
 
             // Create a new row view
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.checked_list_item, parent);
+                convertView = inflater.inflate(R.layout.checked_list_item, parent,false);
 
                 // Find the child views.
                 textView = (TextView) convertView.findViewById(R.id.rowTextView);
