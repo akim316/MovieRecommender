@@ -60,7 +60,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".DetailActivity"
-            android:parentActivityName=".SearchActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RecommendedActivity"

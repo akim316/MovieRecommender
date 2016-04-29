@@ -1,9 +1,13 @@
 package com.cbk.TechTrollywood;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -15,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -24,6 +29,7 @@ import cz.msebera.android.httpclient.Header;
 public class RecentActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private ArrayAdapter<String> mArrayAdapter;
+    private List<String> idArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +40,20 @@ public class RecentActivity extends AppCompatActivity {
         ListView recentMovies=(ListView)findViewById(R.id.recent_movies_listview);
         recentMovies.setAdapter(mArrayAdapter);
         getRecent();
+
+        idArray =new ArrayList<>();
+        recentMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Context context = view.getContext();
+                Intent launchDetail = new Intent(context, DetailActivity.class);
+                ArrayList<String> extraData = new ArrayList<>();
+                extraData.add(mArrayAdapter.getItem(position));
+                extraData.add(idArray.get(position));
+                launchDetail.putStringArrayListExtra("extra", extraData);
+                startActivity(launchDetail);
+            }
+        });
 
     }
 
@@ -52,10 +72,13 @@ public class RecentActivity extends AppCompatActivity {
                 try {
                     JSONArray jMovies = response.getJSONArray("movies");
                     mArrayAdapter.clear();
+                    idArray.clear();
                     for (int i = 0; i < jMovies.length(); i++) {
                         JSONObject movie = jMovies.getJSONObject(i);
                         String title = movie.getString("title");
+                        String id = movie.getString("id");
                         mArrayAdapter.add(title);
+                        idArray.add(id);
                     }
                 } catch (JSONException e) {
                     Log.d("TAG", e.toString());
