@@ -38,12 +38,14 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail);
         context = this;
         TextView movieName = (TextView) findViewById(R.id.movie_name_field);
+        TextView synopsis = (TextView) findViewById(R.id.description_textview);
         fb = new Firebase(getResources().getString(R.string.firebase_url));
         Intent intent = getIntent();
         if (intent != null) {
-            extraData = intent.getStringArrayListExtra("extra");//[0]=movie name [1]=id
+            extraData = intent.getStringArrayListExtra("extra");//[0]=movie name [1]=id [2]=synmposis
             movieName.setText(extraData.get(0));
             getRating(extraData.get(1));
+            synopsis.setText(extraData.get(2));
             //Log.d("TAG",extraData.toString());
         }
     }

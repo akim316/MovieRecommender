@@ -18,7 +18,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/movie_name"
-            android:id="@+id/movie_name_field" />
+            android:id="@+id/movie_name_field"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Text"
+            android:id="@+id/description_textview"
+            android:textColor="#000000" />
 
         <RadioButton
             android:id="@+id/rating_1"

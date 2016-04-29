@@ -30,6 +30,7 @@ public class DVDActivity extends AppCompatActivity {
     private AsyncHttpClient client;
     private ArrayAdapter<String> mArrayAdapter;
     private List<String> idArray;
+    private List<String> synArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class DVDActivity extends AppCompatActivity {
         recentMovies.setAdapter(mArrayAdapter);
         getRecent();
 
-
+        synArray=new ArrayList<>();
         idArray =new ArrayList<>();
         recentMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -51,6 +52,7 @@ public class DVDActivity extends AppCompatActivity {
                 ArrayList<String> extraData = new ArrayList<>();
                 extraData.add(mArrayAdapter.getItem(position));
                 extraData.add(idArray.get(position));
+                extraData.add(synArray.get(position));
                 launchDetail.putStringArrayListExtra("extra", extraData);
                 startActivity(launchDetail);
             }
@@ -74,12 +76,15 @@ public class DVDActivity extends AppCompatActivity {
                     JSONArray jMovies = response.getJSONArray("movies");
                     mArrayAdapter.clear();
                     idArray.clear();
+                    synArray.clear();
                     for (int i = 0; i < jMovies.length(); i++) {
                         JSONObject movie = jMovies.getJSONObject(i);
                         String title = movie.getString("title");
                         String id = movie.getString("id");
+                        String synopsis=movie.getString("synopsis");
                         mArrayAdapter.add(title);
                         idArray.add(id);
+                        synArray.add(synopsis);
                     }
                 } catch (JSONException e) {
                     Log.d("TAG", e.toString());

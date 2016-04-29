@@ -33,6 +33,8 @@ public class SearchActivity extends AppCompatActivity {
     //private Button searchButton;
     private ArrayAdapter<String> mArrayAdapter;
     private List<String> idArray;
+    private List<String> synArray;
+
     /* A dialog that is presented until the Firebase authentication finished. */
 
     private ProgressDialog mAuthProgressDialog;
@@ -50,6 +52,8 @@ public class SearchActivity extends AppCompatActivity {
         ListView movieList = (ListView) findViewById(R.id.movies_search_listView);
         movieList.setAdapter(mArrayAdapter);
         idArray =new ArrayList<>();
+        synArray=new ArrayList<>();
+
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +69,7 @@ public class SearchActivity extends AppCompatActivity {
                 ArrayList<String> extraData=new ArrayList<>();
                 extraData.add(mArrayAdapter.getItem(position));
                 extraData.add(idArray.get(position));
+                extraData.add(synArray.get(position));
                 launchDetail.putStringArrayListExtra("extra", extraData);
                 startActivity(launchDetail);
             }
@@ -93,12 +98,15 @@ public class SearchActivity extends AppCompatActivity {
                     JSONArray jMovies = response.getJSONArray("movies");
                     mArrayAdapter.clear();
                     idArray.clear();
+                    synArray.clear();
                     for (int i = 0; i < jMovies.length(); i++) {
                         JSONObject movie = jMovies.getJSONObject(i);
                         String title = movie.getString("title");
                         mArrayAdapter.add(title);
                         String id = movie.getString("id");
+                        String synopsis=movie.getString("synopsis");
                         idArray.add(id);
+                        synArray.add(synopsis);
                         //Log.d("TAG",idArray.toString());
                     }
                     mAuthProgressDialog.hide();
